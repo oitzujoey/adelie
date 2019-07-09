@@ -1,0 +1,444 @@
+/*
+    C based instruction set
+    
+    For best viewing, set the language to C.
+*/
+
+////////////////////////////////////////////////////////////////////////////////
+//The C machine v1
+
+//All operations must be able to be done with signed/unsigned char, short, int, long, long long, float, and double types.
+
+d = a ? b : c;
+
+c = a + b;
+c = a - b;
+c = a * b;
+c = a / b;
+c = a % b;
+c = a | b;
+c = a ^ b;
+c = a & b;
+c = a << b;
+c = a >> b;
+c = a || b;
+c = a && b;
+c = a == b;
+c = a != b;
+c = a > b;
+c = a < b;
+c = a >= b;
+c = a <= b;
+
+b = 42; //Immediate operand
+b = a;
+b = -a;
+b = ~a;
+b = !a;
+b = &a;
+b = *a;
+*b = a;
+b = (char) a;   //Truncate
+b = (double) a; //Expand
+
+b += a;
+b -= a;
+b |= a;
+b ^= a;
+b &= a;
+
+a++;
+a--;
+++a;
+--a;
+
+c = a[b];
+c[b] = a;
+c = a.b;
+c.b = a;
+c = a->b;
+c->b = a;
+
+c = a(b);
+
+if (a) {
+    b;
+} else {
+    c;
+}
+
+while (a) {
+    b;
+}
+
+do {
+    a;
+} while (b);
+
+for (a; b; c) {
+    d;
+}
+
+a:
+goto b;
+
+
+////////////////////////////////////////////////////////////////////////////////
+//C machine v2
+
+//Uses two's compliment
+
+d = a ? b : c;
+/*
+    c = a ? b : c;
+*/
+
+c = a + b;
+/*
+c = a + b;
+*/
+c = a - b;
+/*
+c = a - b;
+*/
+c = a * b;
+/*
+*
+*/
+c = a / b;
+/*
+/
+*/
+c = a % b;
+/*
+%
+*/
+c = a | b;
+/*
+c = a | b;
+*/
+c = a ^ b;
+/*
+c = a ^ b;
+*/
+c = a & b;
+/*
+c = a & b;
+*/
+c = a << b;
+/*
+<<
+*/
+c = a >> b;
+/*
+>>
+*/
+c = a || b;
+/*
+c = a || b;
+or
+c = (a > 0) | (b > 0);
+*/
+c = a && b;
+/*
+c = a && b;
+or
+c = (a > 0) & (b > 0);
+*/
+c = a == b;
+/*
+c = a - b == 0;
+*/
+c = a != b;
+/*
+c = a - b != 0;
+*/
+c = a > b;
+/*
+c = a - b > 0;
+*/
+c = a < b;
+/*
+c = a - b < 0;
+*/
+c = a >= b;
+/*
+c = a - b >= 0;
+*/
+c = a <= b;
+/*
+c = a - b <= 0;
+*/
+
+a = 42; //Immediate operand
+/*
+a = 42;
+*/
+b = a;
+/*
+b = a;
+*/
+b = -a;
+/*
+b = 0 - a;
+*/
+b = ~a;
+/*
+b = a ^ -1;
+*/
+b = !a;
+/*
+b = (a - 0) == 0;
+*/)
+b = &a;
+/*
+b = &a;
+*/
+b = *a;
+/*
+b = *a;
+*/
+*b = a;
+/*
+*b = a;
+*/
+b = (char) a;   //Truncate
+/*
+b = a & 0x000000FF;
+*/
+b = (double) a; //Expand
+/*
+b = a | 0x00000000;
+*/
+
+
+b += a;
+/*
+b = b + a;
+*/
+b -= a;
+/*
+b = b - a;
+*/
+b |= a;
+/*
+b = b | a;
+*/
+b ^= a;
+/*
+b = b ^ a;
+*/
+b &= a;
+/*
+b = b & a;
+*/
+
+a++;
+/*
+a = a + 1;
+*/
+a--;
+/*
+a = a - 1;
+*/
+++a;
+/*
+a = a + 1;
+*/
+--a;
+/*
+a = a - 1;
+*/
+
+c = a[b];
+/*
+void *t0 = a + (void*) b;
+c = *t0;
+*/
+c[b] = a;
+/*
+void *t0 = a + (void*) b;
+*t0 = c;
+*/
+//Aren't these just moves?
+c = a.b;
+c.b = a;
+//Same here as well.
+c = a->b;
+c->b = a;
+
+c = a(b);
+/*
+I am going to demonstrate only the instructions required and not the algorithm.
+
+*sp = pc;
+sp = sp - 1;
+goto a;
+
+a:
+sp = sp + 1;
+pc = *sp;
+*/
+
+if (a) {
+    b;
+} else {
+    c;
+}
+/*
+pc = a ? t0 : t1;
+t0:
+b;
+goto t2;
+t1:
+c;
+t2:
+*/
+
+while (a) {
+    b;
+}
+/*
+t0:
+pc = !a ? t1;
+b;
+goto t0;
+t1:
+*/
+
+do {
+    a;
+} while (b);
+/*
+t0:
+a;
+pc = b ? t0;
+*/
+
+for (a; b; c) {
+    d;
+}
+/*
+a;
+t0:
+pc = !b ? t1;
+c;
+d;
+t1:
+*/
+
+a:
+goto a;
+/*
+pc = &a;
+*/
+
+
+////////////////////////////////////////////////////////////////////////////////
+//C machine v2
+
+//32 bit data and address
+//Uses two's compliment
+//Registers may be reduced as necessary.
+
+a = a ? b : c;  //Two-way conditional move
+c = a + b;      //Addition
+c = a - b;      //Subtraction
+c = a ^ b;      //Exor
+c = a & b;      //And
+c = a | b;      //Or
+c = a - b == 0; //Equal
+c = a - b != 0; //Not equal
+c = a - b > 0;  //Greater than
+c = a - b < 0;  //Less than
+c = a - b >= 0; //Greater than or equal
+c = a - b <= 0; //Less than or equal
+
+a = 42;         //Set variable
+b = a>>1;       //Right shift
+b = *a;         //Source indirect
+*b = a;         //Destination indirect
+
+
+goto a;         //Jump
+
+
+/*Assembly */   /*Description*/         /*Instruction*/
+
+//In jump and branch instructions, the pc is saved into lr
+
+jmp #           goto #                  {1'0,#}
+jmp rs + #      goto rs + #             {8'10000000,5'rs,19'#}
+
+br rs #         goto rs ? # : pc        {8'10000010,5'rs,19'#}
+br r1 r2 + #    goto r1 ? r2 + # : pc   {8'10000011,5'rs,19'#}
+
+ldi rd #        rd = #                  {8'10000100,5'rd,19'#}
+ld rd [rs]      rd = *rs                {8'10000101,5'rd,5'rs,14'x}
+st [rd] rs      *rd = rs                {8'10000110,5'rd,5'rs,14'x}
+
+mov rd rs       rd = rs                 {8'10000111,5'rd,5'rs,14x}
+
+shr rd rs       rd = rs >> 1            {8'10001000,5'rd,5'rs,14x}
+
+cmov rd r1 r2   rd = rd ? r1 : r2       {8'10001100,5'rd,5'r1,5'r2,9'x}
+
+add rd r1 r2    rd = r1 + r2            {8'10100000,5'rd,5'r1,5'r2,9'x}
+sub rd r1 r2    rd = r1 - r2            {8'10100001,5'rd,5'r1,5'r2,9'x}
+xor rd r1 r2    rd = r1 ^ r2            {8'10100010,5'rd,5'r1,5'r2,9'x}
+and rd r1 r2    rd = r1 & r2            {8'10100011,5'rd,5'r1,5'r2,9'x}
+or rd r1 r2     rd = r1 | r2            {8'10100100,5'rd,5'r1,5'r2,9'x}
+eq rd r1 r2     rd = r1 == r2           {8'10110000,5'rd,5'r1,5'r2,9'x}
+neq rd r1 r2    rd = r1 != r2           {8'10110001,5'rd,5'r1,5'r2,9'x}
+gtr rd r1 r2    rd = r1 > r2            {8'10110010,5'rd,5'r1,5'r2,9'x}
+les rd r1 r2    rd = r1 < r2            {8'10110011,5'rd,5'r1,5'r2,9'x}
+gte rd r1 r2    rd = r1 >= r2           {8'10110100,5'rd,5'r1,5'r2,9'x}
+lse rd r1 r2    rd = r1 <= r2           {8'10110101,5'rd,5'r1,5'r2,9'x}
+
+add rd r1 #     rd = r1 + #             {8'10101000,5'rd,5'r1,14'#}
+sub rd r1 #     rd = r1 - #             {8'10101001,5'rd,5'r1,14'#}
+xor rd r1 #     rd = r1 ^ #             {8'10101010,5'rd,5'r1,14'#}
+and rd r1 #     rd = r1 & #             {8'10101011,5'rd,5'r1,14'#}
+or rd r1 #      rd = r1 | #             {8'10101100,5'rd,5'r1,14'#}
+eq rd r1 #      rd = r1 == #            {8'10111000,5'rd,5'r1,14'#}
+neq rd r1 #     rd = r1 != #            {8'10111001,5'rd,5'r1,14'#}
+gtr rd r1 #     rd = r1 > #             {8'10111010,5'rd,5'r1,14'#}
+les rd r1 #     rd = r1 < #             {8'10111011,5'rd,5'r1,14'#}
+gtr rd r1 #     rd = r1 >= #            {8'10111100,5'rd,5'r1,14'#}
+les rd r1 #     rd = r1 <= #            {8'10111101,5'rd,5'r1,14'#}
+
+hlt                                     {2'11,30'x}
+
+/*Register*//*Function*/
+00  0       Program counter
+01  1       Link register
+02  2       
+03  3       
+04  4       
+05  5       
+06  6       
+07  7       
+08  8       
+09  9       
+0a  10      
+0b  11      
+0c  12      
+0d  13      
+0e  14      
+0f  15      
+10  16      
+11  17      
+12  18      
+13  19      
+14  20      
+15  21      
+16  22      
+17  23      
+18  24      
+19  25      
+1a  26      
+1b  27      
+1c  28      
+1d  29      
+1e  30      
+1f  31      

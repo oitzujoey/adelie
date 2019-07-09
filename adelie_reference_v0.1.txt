@@ -1,0 +1,101 @@
+////////////////////////////////////////////////////////////////////////////////
+//Adelie Reference v0.1
+//
+//Created 6/6/2019
+//by Joey Herguth
+//
+//32 bit data and address
+//Uses two's compliment
+//Registers may be reduced as necessary.
+//In jump and branch instructions, the pc is saved into lr
+//Bit 31 controls alu vs. branch type
+//Bit 30 controls register vs. immediate type
+//
+//Looks good so far!
+//
+//Yikes! This looks a lot like MIPS. That may not be a coincidence.
+//
+
+
+/*Assembly */   /*Description*/         /*Instruction*/
+
+jmp rd          goto rs                 {6'h00,5'x,5'rs,16'x}
+br rd rs        goto rd ? rs : pc       {6'h01,5'rd,5'rs,16'x}
+
+jmp #           goto pc + #             {6'h10,5'x,21'#}
+br rd #         goto pc + rd ? # : 0    {6'h11,5'rd,21'#}
+
+shr rd rs       rd = rs >> 1            {6'h20,5'rd,5'rs,16'x}
+mov rd rs       rd = rs                 {6'h21,5'rd,5'rs,16'x}
+ld rd [rs]      rd = *rs                {6'h22,5'rd,5'rs,16'x}
+st [rd] rs      *rd = rs                {6'h23,5'rd,5'rs,16'x}
+add rd r1 r2    rd = r1 + r2            {6'h24,5'rd,5'r1,5'r2,11'x}
+sub rd r1 r2    rd = r1 - r2            {6'h25,5'rd,5'r1,5'r2,11'x}
+xor rd r1 r2    rd = r1 ^ r2            {6'h26,5'rd,5'r1,5'r2,11'x}
+and rd r1 r2    rd = r1 & r2            {6'h27,5'rd,5'r1,5'r2,11'x}
+or rd r1 r2     rd = r1 | r2            {6'h28,5'rd,5'r1,5'r2,11'x}
+eq rd r1 r2     rd = r1 == r2           {6'h29,5'rd,5'r1,5'r2,11'x}
+neq rd r1 r2    rd = r1 != r2           {6'h2a,5'rd,5'r1,5'r2,11'x}
+gtr rd r1 r2    rd = r1 > r2            {6'h2b,5'rd,5'r1,5'r2,11'x}
+les rd r1 r2    rd = r1 < r2            {6'h2c,5'rd,5'r1,5'r2,11'x}
+gte rd r1 r2    rd = r1 >= r2           {6'h2d,5'rd,5'r1,5'r2,11'x}
+lse rd r1 r2    rd = r1 <= r2           {6'h2e,5'rd,5'r1,5'r2,11'x}
+
+shr rd #        rd = # >> 1             {6'h30,5'rd,5'x,16'#}
+ldi rd #        rd = #                  {6'h31,5'rd,5'x,16'#}
+ld rd [#]       rd = *rs                {6'h32,5'rd,5'x,16'#}
+st [#] rs       *rd = rs                {6'h33,5'x,5'rs,16'#}
+add rd r1 #     rd = r1 + #             {6'h34,5'rd,5'r1,16'#}
+sub rd r1 #     rd = r1 - #             {6'h35,5'rd,5'r1,16'#}
+xor rd r1 #     rd = r1 ^ #             {6'h36,5'rd,5'r1,16'#}
+and rd r1 #     rd = r1 & #             {6'h37,5'rd,5'r1,16'#}
+or rd r1 #      rd = r1 | #             {6'h38,5'rd,5'r1,16'#}
+eq rd r1 #      rd = r1 == #            {6'h39,5'rd,5'r1,16'#}
+neq rd r1 #     rd = r1 != #            {6'h3a,5'rd,5'r1,16'#}
+gtr rd r1 #     rd = r1 > #             {6'h3b,5'rd,5'r1,16'#}
+les rd r1 #     rd = r1 < #             {6'h3c,5'rd,5'r1,16'#}
+gte rd r1 #     rd = r1 >= #            {6'h3d,5'rd,5'r1,16'#}
+lse rd r1 #     rd = r1 <= #            {6'h3e,5'rd,5'r1,16'#}
+
+
+                    31  30  29  28  27  26  25  24  23  22  21  20  19  18  17  16  15  14  13  12  11  10  9   8   7   6   5   4   3   2   1   0
+register branch     0   0   {-- opcode -}   {------ rd -----}   {------ r1 -----}   {---------------------- reserved ---------------------------}
+immediate branch    0   1   {-- opcode -}   {------ rd -----}   {-----------------------------------immediate ----------------------------------}
+register alu        1   0   {-- opcode -}   {------ rd -----}   {------ r1 -----}   {------ r2 -----}   {-------------- reserved ---------------}
+immediate alu       1   1   {-- opcode -}   {------ rd -----}   {------ r1 -----}   {---------------------- immediate --------------------------}
+
+
+/*Register*/    /*Function*/
+
+00  0           Zero
+01  1           Program counter
+02  2           Link register       
+03  3       
+04  4       
+05  5       
+06  6       
+07  7       
+08  8       
+09  9       
+0a  10      
+0b  11      
+0c  12      
+0d  13      
+0e  14      
+0f  15      
+10  16      
+11  17      
+12  18      
+13  19      
+14  20      
+15  21      
+16  22      
+17  23      
+18  24      
+19  25      
+1a  26      
+1b  27      
+1c  28      
+1d  29      
+1e  30      
+1f  31      

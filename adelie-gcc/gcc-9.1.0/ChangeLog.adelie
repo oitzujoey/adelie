@@ -1,0 +1,5 @@
+2019-07-09  Joey Herguth  <oitzujoey@gmail.com>
+
+	* config.sub: Add adelie support.
+	* configure.ac: Add adelie support.
+	* configure: Rebuilt.

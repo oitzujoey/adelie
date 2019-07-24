@@ -1006,6 +1006,9 @@ case "${target}" in
   ft32-*-*)
     noconfigdirs="$noconfigdirs target-rda gprof"
     ;;
+  adelie-*-*)
+    noconfigdirs="$noconfigdirs"
+    ;;
   moxie-*-*)
     noconfigdirs="$noconfigdirs"
     ;;

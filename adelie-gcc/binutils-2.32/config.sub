@@ -1212,6 +1212,7 @@ case $cpu-$vendor in
 			| mipstx39 | mipstx39el \
 			| mmix \
 			| mn10200 | mn10300 \
+			| adelie \
 			| moxie \
 			| mt \
 			| msp430 \

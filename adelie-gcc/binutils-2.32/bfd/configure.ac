@@ -568,8 +568,7 @@ do
     mmix_mmo_vec)			 tb="$tb mmo.lo" target_size=64 ;;
     mn10200_elf32_vec)		 tb="$tb elf-m10200.lo elf32.lo $elf" ;;
     mn10300_elf32_vec)		 tb="$tb elf-m10300.lo elf32.lo $elf" ;;
-    adelie_elf32_be_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
-    adelie_elf32_le_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
+    bfd_elf32_adelie_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
     moxie_elf32_be_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
     moxie_elf32_le_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
     msp430_elf32_vec)		 tb="$tb elf32-msp430.lo elf32.lo $elf" ;;

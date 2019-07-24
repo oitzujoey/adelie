@@ -214,7 +214,6 @@ config.status: creating Makefile
 config.status: creating testsuite/Makefile
 config.status: creating config.h
 config.status: executing default commands
-mkdir -p -- ./intl
 Configuring in ./intl
 configure: creating cache ./config.cache
 checking for x86_64-pc-linux-gnu-gcc... gcc
@@ -340,7 +339,6 @@ config.status: creating Makefile
 config.status: creating config.intl
 config.status: creating config.h
 config.status: executing default-1 commands
-mkdir -p -- ./bfd
 Configuring in ./bfd
 configure: creating cache ./config.cache
 checking build system type... x86_64-pc-linux-gnu

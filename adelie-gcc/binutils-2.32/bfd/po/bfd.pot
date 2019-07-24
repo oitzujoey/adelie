@@ -63,8 +63,6 @@ msgstr ""
 msgid "%pB: unsupported relocation type"
 msgstr ""
 
-# ADELIE_TODO
-
 #. Unknown relocation.
 #: aoutx.h:4407 coff-alpha.c:601 coff-alpha.c:1514 coff-rs6000.c:2772
 #: coff-sh.c:504 coff-tic4x.c:184 coff-tic54x.c:279 elf-hppa.h:798

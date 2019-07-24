@@ -733,6 +733,8 @@ extern const bfd_target mmix_elf64_vec;
 extern const bfd_target mmix_mmo_vec;
 extern const bfd_target mn10200_elf32_vec;
 extern const bfd_target mn10300_elf32_vec;
+extern const bfd_target adelie_elf32_be_vec;
+extern const bfd_target adelie_elf32_le_vec;
 extern const bfd_target moxie_elf32_be_vec;
 extern const bfd_target moxie_elf32_le_vec;
 extern const bfd_target msp430_elf32_vec;
@@ -1108,6 +1110,10 @@ static const bfd_target * const _bfd_target_vector[] =
 
 	&mn10200_elf32_vec,
 	&mn10300_elf32_vec,
+
+	// ADELIE_TODO
+	&adelie_elf32_be_vec,
+	&adelie_elf32_le_vec,
 
 	&moxie_elf32_be_vec,
 	&moxie_elf32_le_vec,

@@ -503,6 +503,11 @@ case "${targ}" in
     targ_selvecs=frv_elf32_vec
     ;;
 
+  adelie-*-elf)
+    targ_defvec=adelie_elf32_be_vec
+    targ_selvecs=adelie_elf32_le_vec
+    ;;
+
   moxie-*-elf | moxie-*-rtems* | moxie-*-uclinux)
     targ_defvec=moxie_elf32_be_vec
     targ_selvecs=moxie_elf32_le_vec

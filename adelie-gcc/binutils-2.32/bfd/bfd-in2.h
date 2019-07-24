@@ -2292,6 +2292,8 @@ enum bfd_architecture
 #define bfd_mach_frvtomcat     499     /* fr500 prototype.  */
 #define bfd_mach_fr500         500
 #define bfd_mach_fr550         550
+  bfd_arch_adelie,    /* The Adelie processor. */
+#define bfd_mach_adelie
   bfd_arch_moxie,     /* The moxie processor.  */
 #define bfd_mach_moxie         1
   bfd_arch_ft32,      /* The ft32 processor.  */
@@ -3166,6 +3168,9 @@ to compensate for the borrow when the low bits are added.  */
   BFD_RELOC_MIPS_COPY,
   BFD_RELOC_MIPS_JUMP_SLOT,
 
+/* Adelie ELF relocations. */
+// ADELIE_TODO I have no idea what this does
+// BFD_RELOC_ADELIE_10_PCREL,
 
 /* Moxie ELF relocations.  */
   BFD_RELOC_MOXIE_10_PCREL,

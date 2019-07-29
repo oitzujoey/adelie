@@ -1,0 +1,8 @@
+adelie-gcc/binutils-2.32/bfd/bfd-in2.h:2298:#define bfd_mach_moxie         1
+adelie-gcc/binutils-2.32/bfd/cpu-moxie.c:32:    bfd_mach_moxie,
+adelie-gcc/binutils-2.32/bfd/archures.c:399:.#define bfd_mach_moxie		1
+adelie-gcc/binutils-2.32/bfd/doc/archures.texi:364:#define bfd_mach_moxie         1
+adelie-gcc/binutils-2.32/bfd/doc/bfd.info:8055:     #define bfd_mach_moxie         1
+adelie-gcc/binutils-2.32/build/bfd/bfd-in3.h:2298:#define bfd_mach_moxie         1
+adelie-gcc/binutils-2.32/build/bfd/bfd.h:2298:#define bfd_mach_moxie         1
+adelie-gcc/binutils-2.32/build/bfd/doc/archures.texi:366:#define bfd_mach_moxie         1

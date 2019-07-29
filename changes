@@ -1,0 +1,2156 @@
+diff --git a/adelie-gcc/binutils-2.32/bfd/Makefile.am b/adelie-gcc/binutils-2.32/bfd/Makefile.am
+index a9191555a..1575264b6 100644
+--- a/adelie-gcc/binutils-2.32/bfd/Makefile.am
++++ b/adelie-gcc/binutils-2.32/bfd/Makefile.am
+@@ -134,6 +134,7 @@ ALL_MACHINES = \
+ 	cpu-microblaze.lo \
+ 	cpu-mips.lo \
+ 	cpu-mmix.lo \
++	cpu-adelie.lo \
+ 	cpu-moxie.lo \
+ 	cpu-msp430.lo \
+ 	cpu-mt.lo \
+@@ -220,6 +221,7 @@ ALL_MACHINES_CFILES = \
+ 	cpu-microblaze.c \
+ 	cpu-mips.c \
+ 	cpu-mmix.c \
++	cpu-adelie.c \
+ 	cpu-moxie.c \
+ 	cpu-msp430.c \
+ 	cpu-mt.c \
+@@ -332,6 +334,7 @@ BFD32_BACKENDS = \
+ 	elf32-mep.lo \
+ 	elf32-metag.lo \
+ 	elf32-microblaze.lo \
++	elf32-adelie.lo \
+ 	elf32-moxie.lo \
+ 	elf32-msp430.lo \
+ 	elf32-mt.lo \
+@@ -469,6 +472,7 @@ BFD32_BACKENDS_CFILES = \
+ 	elf32-mep.c \
+ 	elf32-metag.c \
+ 	elf32-microblaze.c \
++	elf32-adelie.c \
+ 	elf32-moxie.c \
+ 	elf32-msp430.c \
+ 	elf32-mt.c \
+diff --git a/adelie-gcc/binutils-2.32/bfd/Makefile.in b/adelie-gcc/binutils-2.32/bfd/Makefile.in
+index 896df5204..b598510ca 100644
+--- a/adelie-gcc/binutils-2.32/bfd/Makefile.in
++++ b/adelie-gcc/binutils-2.32/bfd/Makefile.in
+@@ -557,6 +557,7 @@ ALL_MACHINES = \
+ 	cpu-microblaze.lo \
+ 	cpu-mips.lo \
+ 	cpu-mmix.lo \
++	cpu-adelie.lo \
+ 	cpu-moxie.lo \
+ 	cpu-msp430.lo \
+ 	cpu-mt.lo \
+@@ -643,6 +644,7 @@ ALL_MACHINES_CFILES = \
+ 	cpu-microblaze.c \
+ 	cpu-mips.c \
+ 	cpu-mmix.c \
++	cpu-adelie.c \
+ 	cpu-moxie.c \
+ 	cpu-msp430.c \
+ 	cpu-mt.c \
+@@ -756,6 +758,7 @@ BFD32_BACKENDS = \
+ 	elf32-mep.lo \
+ 	elf32-metag.lo \
+ 	elf32-microblaze.lo \
++	elf32-adelie.lo \
+ 	elf32-moxie.lo \
+ 	elf32-msp430.lo \
+ 	elf32-mt.lo \
+@@ -893,6 +896,7 @@ BFD32_BACKENDS_CFILES = \
+ 	elf32-mep.c \
+ 	elf32-metag.c \
+ 	elf32-microblaze.c \
++	elf32-adelie.c \
+ 	elf32-moxie.c \
+ 	elf32-msp430.c \
+ 	elf32-mt.c \
+@@ -1359,6 +1363,7 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-microblaze.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-mips.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-mmix.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-adelie.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-moxie.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-msp430.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-mt.Plo@am__quote@
+@@ -1451,6 +1456,7 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-metag.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-microblaze.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-mips.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-adelie.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-moxie.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-msp430.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-mt.Plo@am__quote@
+diff --git a/adelie-gcc/binutils-2.32/bfd/archures.c b/adelie-gcc/binutils-2.32/bfd/archures.c
+index 647cf0d8d..5fe2464a5 100644
+--- a/adelie-gcc/binutils-2.32/bfd/archures.c
++++ b/adelie-gcc/binutils-2.32/bfd/archures.c
+@@ -393,6 +393,8 @@ DESCRIPTION
+ .#define bfd_mach_frvtomcat	499	{* fr500 prototype.  *}
+ .#define bfd_mach_fr500		500
+ .#define bfd_mach_fr550		550
++.  bfd_arch_adelie,    {* The Adelie processor *}
++.#define bfd_mach_adelie  1
+ .  bfd_arch_moxie,     {* The moxie processor.  *}
+ .#define bfd_mach_moxie		1
+ .  bfd_arch_ft32,      {* The ft32 processor.  *}
+@@ -629,6 +631,7 @@ extern const bfd_arch_info_type bfd_microblaze_arch;
+ extern const bfd_arch_info_type bfd_mmix_arch;
+ extern const bfd_arch_info_type bfd_mn10200_arch;
+ extern const bfd_arch_info_type bfd_mn10300_arch;
++extern const bfd_arch_info_type bfd_adelie_arch;
+ extern const bfd_arch_info_type bfd_moxie_arch;
+ extern const bfd_arch_info_type bfd_ft32_arch;
+ extern const bfd_arch_info_type bfd_msp430_arch;
+@@ -720,6 +723,7 @@ static const bfd_arch_info_type * const bfd_archures_list[] =
+     &bfd_mmix_arch,
+     &bfd_mn10200_arch,
+     &bfd_mn10300_arch,
++    &bfd_adelie_arch,
+     &bfd_moxie_arch,
+     &bfd_ft32_arch,
+     &bfd_msp430_arch,
+diff --git a/adelie-gcc/binutils-2.32/bfd/bfd-in2.h b/adelie-gcc/binutils-2.32/bfd/bfd-in2.h
+index e25da50aa..82a1a998f 100644
+--- a/adelie-gcc/binutils-2.32/bfd/bfd-in2.h
++++ b/adelie-gcc/binutils-2.32/bfd/bfd-in2.h
+@@ -2292,6 +2292,8 @@ enum bfd_architecture
+ #define bfd_mach_frvtomcat     499     /* fr500 prototype.  */
+ #define bfd_mach_fr500         500
+ #define bfd_mach_fr550         550
++  bfd_arch_adelie,    /* The Adelie processor. */
++#define bfd_mach_adelie
+   bfd_arch_moxie,     /* The moxie processor.  */
+ #define bfd_mach_moxie         1
+   bfd_arch_ft32,      /* The ft32 processor.  */
+@@ -3166,6 +3168,9 @@ to compensate for the borrow when the low bits are added.  */
+   BFD_RELOC_MIPS_COPY,
+   BFD_RELOC_MIPS_JUMP_SLOT,
+ 
++/* Adelie ELF relocations. */
++// ADELIE_TODO I have no idea what this does
++// BFD_RELOC_ADELIE_10_PCREL,
+ 
+ /* Moxie ELF relocations.  */
+   BFD_RELOC_MOXIE_10_PCREL,
+diff --git a/adelie-gcc/binutils-2.32/bfd/config.bfd b/adelie-gcc/binutils-2.32/bfd/config.bfd
+index 0e1ddb659..a6b2693f2 100644
+--- a/adelie-gcc/binutils-2.32/bfd/config.bfd
++++ b/adelie-gcc/binutils-2.32/bfd/config.bfd
+@@ -503,6 +503,10 @@ case "${targ}" in
+     targ_selvecs=frv_elf32_vec
+     ;;
+ 
++  adelie-*-elf)
++    targ_defvec=bfd_elf32_adelie_vec
++    ;;
++
+   moxie-*-elf | moxie-*-rtems* | moxie-*-uclinux)
+     targ_defvec=moxie_elf32_be_vec
+     targ_selvecs=moxie_elf32_le_vec
+diff --git a/adelie-gcc/binutils-2.32/bfd/configure b/adelie-gcc/binutils-2.32/bfd/configure
+index 04786696d..1608de586 100755
+--- a/adelie-gcc/binutils-2.32/bfd/configure
++++ b/adelie-gcc/binutils-2.32/bfd/configure
+@@ -14800,6 +14800,7 @@ do
+     mmix_mmo_vec)			 tb="$tb mmo.lo" target_size=64 ;;
+     mn10200_elf32_vec)		 tb="$tb elf-m10200.lo elf32.lo $elf" ;;
+     mn10300_elf32_vec)		 tb="$tb elf-m10300.lo elf32.lo $elf" ;;
++    bfd_elf32_adelie_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
+     moxie_elf32_be_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
+     moxie_elf32_le_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
+     msp430_elf32_vec)		 tb="$tb elf32-msp430.lo elf32.lo $elf" ;;
+diff --git a/adelie-gcc/binutils-2.32/bfd/configure.ac b/adelie-gcc/binutils-2.32/bfd/configure.ac
+index eda38ea08..dac39be8b 100644
+--- a/adelie-gcc/binutils-2.32/bfd/configure.ac
++++ b/adelie-gcc/binutils-2.32/bfd/configure.ac
+@@ -568,6 +568,7 @@ do
+     mmix_mmo_vec)			 tb="$tb mmo.lo" target_size=64 ;;
+     mn10200_elf32_vec)		 tb="$tb elf-m10200.lo elf32.lo $elf" ;;
+     mn10300_elf32_vec)		 tb="$tb elf-m10300.lo elf32.lo $elf" ;;
++    bfd_elf32_adelie_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
+     moxie_elf32_be_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
+     moxie_elf32_le_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
+     msp430_elf32_vec)		 tb="$tb elf32-msp430.lo elf32.lo $elf" ;;
+diff --git a/adelie-gcc/binutils-2.32/bfd/cpu-adelie.c b/adelie-gcc/binutils-2.32/bfd/cpu-adelie.c
+new file mode 100644
+index 000000000..562155f8e
+--- /dev/null
++++ b/adelie-gcc/binutils-2.32/bfd/cpu-adelie.c
+@@ -0,0 +1,43 @@
++/* BFD support for the Adelie processor.
++   Copyright (C) 2009-2019 Free Software Foundation, Inc.
++
++   Copied from cpu-moxie.c which is..
++   Copyright (C) 2009-2019 Free Software Foundation, Inc.
++
++   This file is part of BFD, the Binary File Descriptor library.
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program; if not, write to the Free Software Foundation,
++   Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
++
++#include "sysdep.h"
++#include "bfd.h"
++#include "libbfd.h"
++
++
++const bfd_arch_info_type bfd_adelie_arch =
++  {
++    32,		      /* 32 bits in a word.  */
++    32,		      /* 32 bits in an address.  */
++    8,		      /* 8 bits in a byte.  */
++    bfd_arch_adelie,   /* enum bfd_architecture arch.  */
++    bfd_mach_adelie,
++    "adelie",	      /* Arch name.  */
++    "adelie",	      /* Printable name.  */
++    2,		      /* Unsigned int section alignment power.  */
++    TRUE,	      /* The one and only. (Is default architecture?)  */
++    bfd_default_compatible,
++    bfd_default_scan,
++    bfd_arch_default_fill,
++    0,
++  };
+diff --git a/adelie-gcc/binutils-2.32/bfd/doc/bfd.info b/adelie-gcc/binutils-2.32/bfd/doc/bfd.info
+index 7906330c7..6f352d418 100644
+--- a/adelie-gcc/binutils-2.32/bfd/doc/bfd.info
++++ b/adelie-gcc/binutils-2.32/bfd/doc/bfd.info
+@@ -1,5 +1,7 @@
+ This is bfd.info, produced by makeinfo version 6.5 from bfd.texi.
+ 
++ADELIE_TODO
++
+ This file documents the BFD library.
+ 
+    Copyright (C) 1991-2019 Free Software Foundation, Inc.
+diff --git a/adelie-gcc/binutils-2.32/bfd/elf32-adelie.c b/adelie-gcc/binutils-2.32/bfd/elf32-adelie.c
+new file mode 100644
+index 000000000..a456e151e
+--- /dev/null
++++ b/adelie-gcc/binutils-2.32/bfd/elf32-adelie.c
+@@ -0,0 +1,57 @@
++/* Adelie-specific support for 32-bit ELF.
++   Copyright (C) 2009-2019 Free Software Foundation, Inc.
++
++   Copied from elf32-moxie.c which is..
++   Copyright (C) 1998-2019 Free Software Foundation, Inc.
++
++   Copied from elf32-fr30.c which is..
++   Copyright (C) 1998-2019 Free Software Foundation, Inc.
++
++   This file is part of BFD, the Binary File Descriptor library.
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program; if not, write to the Free Software
++   Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,
++   MA 02110-1301, USA.  */
++
++// ADELIE_TODO
++
++#include "sysdep.h"
++#include "bfd.h"
++#include "libbfd.h"
++#include "elf-bfd.h"
++// #include "elf/adelie.h"
++
++#define ELF_ARCH		bfd_arch_adelie
++#define ELF_MACHINE_CODE	EM_ADELIE
++#define ELF_MAXPAGESIZE		0x1
++
++// #define TARGET_BIG_SYM		adelie_elf32_be_vec
++#define TARGET_BIG_SYM		bfd_elf32_adelie_vec
++#define TARGET_BIG_NAME		"elf32-adelie"
++// #define TARGET_LITTLE_SYM	adelie_elf32_le_vec
++// #define TARGET_LITTLE_NAME	"elf32-littleadelie"
++
++// #define elf_info_to_howto_rel			NULL
++#define elf_info_to_howto			_bfd_elf_no_info_to_howto
++// #define elf_backend_relocate_section		moxie_elf_relocate_section
++// #define elf_backend_gc_mark_hook		moxie_elf_gc_mark_hook
++// #define elf_backend_check_relocs		moxie_elf_check_relocs
++
++// #define elf_backend_can_gc_sections		1
++// #define elf_backend_rela_normal			1
++
++#define bfd_elf32_bfd_reloc_type_lookup		bfd_default_reloc_type_lookup
++#define bfd_elf32_bfd_reloc_name_lookup		_bfd_norelocs_bfd_reloc_name_lookup
++
++#include "elf32-target.h"
+diff --git a/adelie-gcc/binutils-2.32/bfd/libbfd.h b/adelie-gcc/binutils-2.32/bfd/libbfd.h
+index 36284d71a..7ecfcb14e 100644
+--- a/adelie-gcc/binutils-2.32/bfd/libbfd.h
++++ b/adelie-gcc/binutils-2.32/bfd/libbfd.h
+@@ -1243,6 +1243,9 @@ static const char *const bfd_reloc_code_real_names[] = { "@@uninitialized@@",
+   "BFD_RELOC_MIPS_COPY",
+   "BFD_RELOC_MIPS_JUMP_SLOT",
+ 
++  // ADELIE_TODO
++  // "BFD_RELOC_ADELIE_10_PCREL"
++
+   "BFD_RELOC_MOXIE_10_PCREL",
+ 
+   "BFD_RELOC_FT32_10",
+diff --git a/adelie-gcc/binutils-2.32/bfd/po/SRC-POTFILES.in b/adelie-gcc/binutils-2.32/bfd/po/SRC-POTFILES.in
+index 711667997..b3f0842de 100644
+--- a/adelie-gcc/binutils-2.32/bfd/po/SRC-POTFILES.in
++++ b/adelie-gcc/binutils-2.32/bfd/po/SRC-POTFILES.in
+@@ -82,6 +82,7 @@ cpu-metag.c
+ cpu-microblaze.c
+ cpu-mips.c
+ cpu-mmix.c
++cpu-adelie.c
+ cpu-moxie.c
+ cpu-msp430.c
+ cpu-mt.c
+diff --git a/adelie-gcc/binutils-2.32/bfd/reloc.c b/adelie-gcc/binutils-2.32/bfd/reloc.c
+index e6446a780..d64ab0469 100644
+--- a/adelie-gcc/binutils-2.32/bfd/reloc.c
++++ b/adelie-gcc/binutils-2.32/bfd/reloc.c
+@@ -2356,6 +2356,11 @@ ENUMDOC
+   MIPS ELF relocations (VxWorks and PLT extensions).
+ COMMENT
+ 
++ENUM
++ENUMDOC
++  ADELIE_TODO Adelie ELF relocations.
++COMMENT
++
+ ENUM
+   BFD_RELOC_MOXIE_10_PCREL
+ ENUMDOC
+diff --git a/adelie-gcc/binutils-2.32/bfd/targets.c b/adelie-gcc/binutils-2.32/bfd/targets.c
+index 158168cb3..359db12a6 100644
+--- a/adelie-gcc/binutils-2.32/bfd/targets.c
++++ b/adelie-gcc/binutils-2.32/bfd/targets.c
+@@ -733,6 +733,7 @@ extern const bfd_target mmix_elf64_vec;
+ extern const bfd_target mmix_mmo_vec;
+ extern const bfd_target mn10200_elf32_vec;
+ extern const bfd_target mn10300_elf32_vec;
++extern const bfd_target bfd_elf32_adelie_vec;
+ extern const bfd_target moxie_elf32_be_vec;
+ extern const bfd_target moxie_elf32_le_vec;
+ extern const bfd_target msp430_elf32_vec;
+@@ -1109,6 +1110,8 @@ static const bfd_target * const _bfd_target_vector[] =
+ 	&mn10200_elf32_vec,
+ 	&mn10300_elf32_vec,
+ 
++	&bfd_elf32_adelie_vec,
++
+ 	&moxie_elf32_be_vec,
+ 	&moxie_elf32_le_vec,
+ 
+diff --git a/adelie-gcc/binutils-2.32/binutils/MAINTAINERS b/adelie-gcc/binutils-2.32/binutils/MAINTAINERS
+index 415846bcc..ab771edde 100644
+--- a/adelie-gcc/binutils-2.32/binutils/MAINTAINERS
++++ b/adelie-gcc/binutils-2.32/binutils/MAINTAINERS
+@@ -61,6 +61,7 @@ responsibility among the other maintainers.
+   ALPHA            Richard Henderson <rth@twiddle.net>
+   AARCH64	   Richard Earnshaw <rearnsha@arm.com>
+   AARCH64	   Marcus Shawcroft <marcus.shawcroft@arm.com>
++  Adelie		   Joey Herguth <oitzujoey@gmail.com>
+   ARC		   Claudiu Zissulescu <claziss@synopsys.com>
+   ARM		   Nick Clifton <nickc@redhat.com>
+   ARM		   Richard Earnshaw <rearnsha@arm.com>
+diff --git a/adelie-gcc/binutils-2.32/binutils/readelf.c b/adelie-gcc/binutils-2.32/binutils/readelf.c
+index b13eb6a43..03eb605af 100644
+--- a/adelie-gcc/binutils-2.32/binutils/readelf.c
++++ b/adelie-gcc/binutils-2.32/binutils/readelf.c
+@@ -129,6 +129,7 @@
+ #include "elf/mmix.h"
+ #include "elf/mn10200.h"
+ #include "elf/mn10300.h"
++#include "elf/adelie.h"
+ #include "elf/moxie.h"
+ #include "elf/mt.h"
+ #include "elf/msp430.h"
+@@ -824,6 +825,7 @@ guess_is_rela (unsigned int e_machine)
+     case EM_CYGNUS_MN10200:
+     case EM_MN10300:
+     case EM_CYGNUS_MN10300:
++	case EM_ADELIE:
+     case EM_MOXIE:
+     case EM_MSP430:
+     case EM_MSP430_OLD:
+@@ -1366,6 +1368,10 @@ dump_relocations (Filedata *          filedata,
+ 	  rtype = elf_mmix_reloc_type (type);
+ 	  break;
+ 
++	case EM_ADELIE:
++	  rtype = elf_adelie_reloc_type (type);
++	  break;
++
+ 	case EM_MOXIE:
+ 	  rtype = elf_moxie_reloc_type (type);
+ 	  break;
+@@ -2487,6 +2493,7 @@ get_machine_name (unsigned e_machine)
+     case EM_Z80:		return "Zilog Z80";
+     case EM_VISIUM:		return "CDS VISIUMcore processor";
+     case EM_FT32:               return "FTDI Chip FT32";
++	case EM_ADELIE:				return "Adelie";
+     case EM_MOXIE:              return "Moxie";
+     case EM_AMDGPU: 	 	return "AMD GPU";
+     case EM_RISCV: 	 	return "RISC-V";
+@@ -12452,6 +12459,8 @@ is_32bit_abs_reloc (Filedata * filedata, unsigned int reloc_type)
+     case EM_CYGNUS_MN10300:
+     case EM_MN10300:
+       return reloc_type == 1; /* R_MN10300_32.  */
++    case EM_ADELIE:
++      return reloc_type == 1; /* R_ADELIE_32.  */
+     case EM_MOXIE:
+       return reloc_type == 1; /* R_MOXIE_32.  */
+     case EM_MSP430_OLD:
+@@ -12988,6 +12997,7 @@ is_none_reloc (Filedata * filedata, unsigned int reloc_type)
+     case EM_M32R:    /* R_M32R_NONE.  */
+     case EM_MIPS:    /* R_MIPS_NONE.  */
+     case EM_MN10300: /* R_MN10300_NONE.  */
++    case EM_ADELIE:   /* R_ADELIE_NONE.  */
+     case EM_MOXIE:   /* R_MOXIE_NONE.  */
+     case EM_NIOS32:  /* R_NIOS_NONE.  */
+     case EM_OR1K:    /* R_OR1K_NONE. */
+diff --git a/adelie-gcc/binutils-2.32/build/log b/adelie-gcc/binutils-2.32/build/log
+new file mode 100644
+index 000000000..0569cdb26
+--- /dev/null
++++ b/adelie-gcc/binutils-2.32/build/log
+@@ -0,0 +1,1295 @@
++make[1]: Entering directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build'
++mkdir -p -- ./libiberty
++Configuring in ./libiberty
++configure: creating cache ./config.cache
++checking whether to enable maintainer-specific portions of Makefiles... no
++checking for makeinfo... makeinfo --split-size=5000000
++checking for perl... perl
++checking build system type... x86_64-pc-linux-gnu
++checking host system type... x86_64-pc-linux-gnu
++checking for x86_64-pc-linux-gnu-ar... ar
++checking for x86_64-pc-linux-gnu-ranlib... ranlib
++checking whether to install libiberty headers and static library... no
++configure: target_header_dir = 
++checking for x86_64-pc-linux-gnu-gcc... gcc
++checking whether the C compiler works... yes
++checking for C compiler default output file name... a.out
++checking for suffix of executables... 
++checking whether we are cross compiling... no
++checking for suffix of object files... o
++checking whether we are using the GNU C compiler... yes
++checking whether gcc accepts -g... yes
++checking for gcc option to accept ISO C89... none needed
++checking how to run the C preprocessor... gcc -E
++checking for grep that handles long lines and -e... /usr/bin/grep
++checking for egrep... /usr/bin/grep -E
++checking for ANSI C header files... yes
++checking for sys/types.h... yes
++checking for sys/stat.h... yes
++checking for stdlib.h... yes
++checking for string.h... yes
++checking for memory.h... yes
++checking for strings.h... yes
++checking for inttypes.h... yes
++checking for stdint.h... yes
++checking for unistd.h... yes
++checking minix/config.h usability... no
++checking minix/config.h presence... no
++checking for minix/config.h... no
++checking whether it is safe to define __EXTENSIONS__... yes
++checking for special C compiler options needed for large files... no
++checking for _FILE_OFFSET_BITS value needed for large files... no
++checking whether gcc supports -W... yes
++checking whether gcc supports -Wall... yes
++checking whether gcc supports -Wwrite-strings... yes
++checking whether gcc supports -Wc++-compat... yes
++checking whether gcc supports -Wstrict-prototypes... yes
++checking whether gcc supports -Wshadow=local... yes
++checking whether gcc supports -pedantic ... yes
++checking whether gcc and cc understand -c and -o together... yes
++checking for an ANSI C-conforming const... yes
++checking for inline... inline
++checking whether byte ordering is bigendian... no
++checking for a BSD-compatible install... /usr/bin/install -c
++checking for sys/file.h... yes
++checking for sys/param.h... yes
++checking for limits.h... yes
++checking for stdlib.h... (cached) yes
++checking for malloc.h... yes
++checking for string.h... (cached) yes
++checking for unistd.h... (cached) yes
++checking for strings.h... (cached) yes
++checking for sys/time.h... yes
++checking for time.h... yes
++checking for sys/resource.h... yes
++checking for sys/stat.h... (cached) yes
++checking for sys/mman.h... yes
++checking for fcntl.h... yes
++checking for alloca.h... yes
++checking for sys/pstat.h... no
++checking for sys/sysmp.h... no
++checking for sys/sysinfo.h... yes
++checking for machine/hal_sysinfo.h... no
++checking for sys/table.h... no
++checking for sys/sysctl.h... yes
++checking for sys/systemcfg.h... no
++checking for stdint.h... (cached) yes
++checking for stdio_ext.h... yes
++checking for process.h... no
++checking for sys/prctl.h... yes
++checking for sys/wait.h that is POSIX.1 compatible... yes
++checking whether time.h and sys/time.h may both be included... yes
++checking whether errno must be declared... no
++checking size of int... 4
++checking size of long... 8
++checking size of size_t... 8
++checking for long long... yes
++checking size of long long... 8
++checking for a 64-bit type... uint64_t
++checking for intptr_t... yes
++checking for uintptr_t... yes
++checking for ssize_t... yes
++checking for pid_t... yes
++checking for library containing strerror... none required
++checking for asprintf... yes
++checking for atexit... yes
++checking for basename... yes
++checking for bcmp... yes
++checking for bcopy... yes
++checking for bsearch... yes
++checking for bzero... yes
++checking for calloc... yes
++checking for clock... yes
++checking for ffs... yes
++checking for getcwd... yes
++checking for getpagesize... yes
++checking for gettimeofday... yes
++checking for index... yes
++checking for insque... yes
++checking for memchr... yes
++checking for memcmp... yes
++checking for memcpy... yes
++checking for memmem... yes
++checking for memmove... yes
++checking for mempcpy... yes
++checking for memset... yes
++checking for mkstemps... yes
++checking for putenv... yes
++checking for random... yes
++checking for rename... yes
++checking for rindex... yes
++checking for setenv... yes
++checking for snprintf... yes
++checking for sigsetmask... yes
++checking for stpcpy... yes
++checking for stpncpy... yes
++checking for strcasecmp... yes
++checking for strchr... yes
++checking for strdup... yes
++checking for strncasecmp... yes
++checking for strndup... yes
++checking for strnlen... yes
++checking for strrchr... yes
++checking for strstr... yes
++checking for strtod... yes
++checking for strtol... yes
++checking for strtoul... yes
++checking for strtoll... yes
++checking for strtoull... yes
++checking for strverscmp... yes
++checking for tmpnam... yes
++checking for vasprintf... yes
++checking for vfprintf... yes
++checking for vprintf... yes
++checking for vsnprintf... yes
++checking for vsprintf... yes
++checking for waitpid... yes
++checking for setproctitle... no
++checking whether alloca needs Cray hooks... no
++checking stack direction for C alloca... -1
++checking for vfork.h... no
++checking for fork... yes
++checking for vfork... yes
++checking for working fork... yes
++checking for working vfork... (cached) yes
++checking for _doprnt... no
++checking for sys_errlist... yes
++checking for sys_nerr... yes
++checking for sys_siglist... yes
++checking for external symbol _system_configuration... no
++checking for __fsetlocking... yes
++checking for canonicalize_file_name... yes
++checking for dup3... yes
++checking for getrlimit... yes
++checking for getrusage... yes
++checking for getsysinfo... no
++checking for gettimeofday... (cached) yes
++checking for on_exit... yes
++checking for pipe2... yes
++checking for psignal... yes
++checking for pstat_getdynamic... no
++checking for pstat_getstatic... no
++checking for realpath... yes
++checking for setrlimit... yes
++checking for sbrk... yes
++checking for spawnve... no
++checking for spawnvpe... no
++checking for strerror... yes
++checking for strsignal... yes
++checking for sysconf... yes
++checking for sysctl... yes
++checking for sysmp... no
++checking for table... no
++checking for times... yes
++checking for wait3... yes
++checking for wait4... yes
++checking whether basename is declared... yes
++checking whether ffs is declared... yes
++checking whether asprintf is declared... yes
++checking whether vasprintf is declared... yes
++checking whether snprintf is declared... yes
++checking whether vsnprintf is declared... yes
++checking whether calloc is declared... yes
++checking whether getenv is declared... yes
++checking whether getopt is declared... yes
++checking whether malloc is declared... yes
++checking whether realloc is declared... yes
++checking whether sbrk is declared... yes
++checking whether strtol is declared... yes
++checking whether strtoul is declared... yes
++checking whether strtoll is declared... yes
++checking whether strtoull is declared... yes
++checking whether strverscmp is declared... yes
++checking whether strnlen is declared... yes
++checking whether canonicalize_file_name must be declared... no
++checking for stdlib.h... (cached) yes
++checking for unistd.h... (cached) yes
++checking for sys/param.h... (cached) yes
++checking for getpagesize... (cached) yes
++checking for working mmap... yes
++checking for working strncmp... yes
++configure: updating cache ./config.cache
++configure: creating ./config.status
++config.status: creating Makefile
++config.status: creating testsuite/Makefile
++config.status: creating config.h
++config.status: executing default commands
++Configuring in ./intl
++configure: creating cache ./config.cache
++checking for x86_64-pc-linux-gnu-gcc... gcc
++checking whether the C compiler works... yes
++checking for C compiler default output file name... a.out
++checking for suffix of executables... 
++checking whether we are cross compiling... no
++checking for suffix of object files... o
++checking whether we are using the GNU C compiler... yes
++checking whether gcc accepts -g... yes
++checking for gcc option to accept ISO C89... none needed
++checking how to run the C preprocessor... gcc -E
++checking for grep that handles long lines and -e... /usr/bin/grep
++checking for egrep... /usr/bin/grep -E
++checking for ANSI C header files... yes
++checking for sys/types.h... yes
++checking for sys/stat.h... yes
++checking for stdlib.h... yes
++checking for string.h... yes
++checking for memory.h... yes
++checking for strings.h... yes
++checking for inttypes.h... yes
++checking for stdint.h... yes
++checking for unistd.h... yes
++checking minix/config.h usability... no
++checking minix/config.h presence... no
++checking for minix/config.h... no
++checking whether it is safe to define __EXTENSIONS__... yes
++checking whether make sets $(MAKE)... yes
++checking for a BSD-compatible install... /usr/bin/install -c
++checking whether NLS is requested... yes
++checking for msgfmt... /usr/bin/msgfmt
++checking for gmsgfmt... /usr/bin/msgfmt
++checking for xgettext... /usr/bin/xgettext
++checking for msgmerge... /usr/bin/msgmerge
++checking build system type... x86_64-pc-linux-gnu
++checking host system type... x86_64-pc-linux-gnu
++checking for x86_64-pc-linux-gnu-ranlib... ranlib
++checking for library containing strerror... none required
++checking for an ANSI C-conforming const... yes
++checking for inline... inline
++checking for off_t... yes
++checking for size_t... yes
++checking for working alloca.h... yes
++checking for alloca... yes
++checking for stdlib.h... (cached) yes
++checking for unistd.h... (cached) yes
++checking for sys/param.h... yes
++checking for getpagesize... yes
++checking for working mmap... yes
++checking whether we are using the GNU C Library 2.1 or newer... yes
++checking whether integer division by zero raises SIGFPE... yes
++checking for inttypes.h... yes
++checking for stdint.h... yes
++checking for unsigned long long... yes
++checking for inttypes.h... yes
++checking whether the inttypes.h PRIxNN macros are broken... no
++checking for ld used by GCC... ld
++checking if the linker (ld) is GNU ld... yes
++checking for shared library run path origin... done
++checking argz.h usability... yes
++checking argz.h presence... yes
++checking for argz.h... yes
++checking limits.h usability... yes
++checking limits.h presence... yes
++checking for limits.h... yes
++checking locale.h usability... yes
++checking locale.h presence... yes
++checking for locale.h... yes
++checking nl_types.h usability... yes
++checking nl_types.h presence... yes
++checking for nl_types.h... yes
++checking malloc.h usability... yes
++checking malloc.h presence... yes
++checking for malloc.h... yes
++checking stddef.h usability... yes
++checking stddef.h presence... yes
++checking for stddef.h... yes
++checking for stdlib.h... (cached) yes
++checking for string.h... (cached) yes
++checking for unistd.h... (cached) yes
++checking for sys/param.h... (cached) yes
++checking for feof_unlocked... yes
++checking for fgets_unlocked... yes
++checking for getc_unlocked... yes
++checking for getcwd... yes
++checking for getegid... yes
++checking for geteuid... yes
++checking for getgid... yes
++checking for getuid... yes
++checking for mempcpy... yes
++checking for munmap... yes
++checking for putenv... yes
++checking for setenv... yes
++checking for setlocale... yes
++checking for stpcpy... yes
++checking for strcasecmp... yes
++checking for strdup... yes
++checking for strtoul... yes
++checking for tsearch... yes
++checking for __argz_count... yes
++checking for __argz_stringify... yes
++checking for __argz_next... yes
++checking for __fsetlocking... yes
++checking for iconv... yes
++checking for iconv declaration... 
++         extern size_t iconv (iconv_t cd, char * *inbuf, size_t *inbytesleft, char * *outbuf, size_t *outbytesleft);
++checking for nl_langinfo and CODESET... yes
++checking for LC_MESSAGES... yes
++checking for bison... bison
++checking version of bison... 3.3.2, ok
++checking whether NLS is requested... yes
++checking whether included gettext is requested... no
++checking for GNU gettext in libc... yes
++checking whether to use NLS... yes
++checking where the gettext function comes from... libc
++checking for aclocal... aclocal
++checking for autoconf... autoconf
++checking for autoheader... autoheader
++configure: updating cache ./config.cache
++configure: creating ./config.status
++config.status: creating Makefile
++config.status: creating config.intl
++config.status: creating config.h
++config.status: executing default-1 commands
++Configuring in ./bfd
++configure: creating cache ./config.cache
++checking build system type... x86_64-pc-linux-gnu
++checking host system type... x86_64-pc-linux-gnu
++checking target system type... moxie-unknown-elf
++checking for x86_64-pc-linux-gnu-gcc... gcc
++checking whether the C compiler works... yes
++checking for C compiler default output file name... a.out
++checking for suffix of executables... 
++checking whether we are cross compiling... no
++checking for suffix of object files... o
++checking whether we are using the GNU C compiler... yes
++checking whether gcc accepts -g... yes
++checking for gcc option to accept ISO C89... none needed
++checking whether gcc understands -c and -o together... yes
++checking for library containing strerror... none required
++checking for a BSD-compatible install... /usr/bin/install -c
++checking whether build environment is sane... yes
++checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
++checking for gawk... gawk
++checking whether make sets $(MAKE)... yes
++checking for style of include used by make... GNU
++checking whether make supports nested variables... yes
++checking dependency style of gcc... gcc3
++checking for x86_64-pc-linux-gnu-ar... ar
++checking for x86_64-pc-linux-gnu-ranlib... ranlib
++checking for x86_64-pc-linux-gnu-gcc... (cached) gcc
++checking whether we are using the GNU C compiler... (cached) yes
++checking whether gcc accepts -g... (cached) yes
++checking for gcc option to accept ISO C89... (cached) none needed
++checking whether gcc understands -c and -o together... (cached) yes
++checking how to run the C preprocessor... gcc -E
++checking for grep that handles long lines and -e... /usr/bin/grep
++checking for egrep... /usr/bin/grep -E
++checking for ANSI C header files... yes
++checking for sys/types.h... yes
++checking for sys/stat.h... yes
++checking for stdlib.h... yes
++checking for string.h... yes
++checking for memory.h... yes
++checking for strings.h... yes
++checking for inttypes.h... yes
++checking for stdint.h... yes
++checking for unistd.h... yes
++checking minix/config.h usability... no
++checking minix/config.h presence... no
++checking for minix/config.h... no
++checking whether it is safe to define __EXTENSIONS__... yes
++checking how to print strings... printf
++checking for a sed that does not truncate output... /usr/bin/sed
++checking for fgrep... /usr/bin/grep -F
++checking for ld used by gcc... ld
++checking if the linker (ld) is GNU ld... yes
++checking for BSD- or MS-compatible name lister (nm)... nm
++checking the name lister (nm) interface... BSD nm
++checking whether ln -s works... yes
++checking the maximum length of command line arguments... 1572864
++checking whether the shell understands some XSI constructs... yes
++checking whether the shell understands "+="... yes
++checking for ld option to reload object files... -r
++checking for x86_64-pc-linux-gnu-objdump... objdump
++checking how to recognize dependent libraries... pass_all
++checking for x86_64-pc-linux-gnu-ar... (cached) ar
++checking for x86_64-pc-linux-gnu-strip... no
++checking for strip... strip
++checking for x86_64-pc-linux-gnu-ranlib... (cached) ranlib
++checking command to parse nm output from gcc object... ok
++checking for dlfcn.h... yes
++checking for objdir... .libs
++checking if gcc supports -fno-rtti -fno-exceptions... no
++checking for gcc option to produce PIC... -fPIC -DPIC
++checking if gcc PIC flag -fPIC -DPIC works... yes
++checking if gcc static flag -static works... yes
++checking if gcc supports -c -o file.o... yes
++checking if gcc supports -c -o file.o... (cached) yes
++checking whether the gcc linker (ld -m elf_x86_64) supports shared libraries... yes
++checking dynamic linker characteristics... GNU/Linux ld.so
++checking how to hardcode library paths into programs... immediate
++checking for shl_load... no
++checking for shl_load in -ldld... no
++checking for dlopen... no
++checking for dlopen in -ldl... yes
++checking whether a program can dlopen itself... yes
++checking whether a statically linked program can dlopen itself... no
++checking whether stripping libraries is possible... yes
++checking if libtool supports shared libraries... yes
++checking whether to build shared libraries... no
++checking whether to build static libraries... yes
++checking for dlfcn.h... (cached) yes
++checking for windows.h... no
++checking for library containing dlsym... -ldl
++checking for special C compiler options needed for large files... no
++checking for _FILE_OFFSET_BITS value needed for large files... no
++Setting warning flags = -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wstack-usage=262144
++checking whether to enable maintainer-specific portions of Makefiles... no
++checking whether to install libbfd... no
++checking whether NLS is requested... yes
++checking for catalogs to be installed...  da es fi fr hr id ja pt ro ru rw sr sv tr uk vi zh_CN da es fi fr hr id ja pt ro ru rw sr sv tr uk vi zh_CN
++checking whether NLS is requested... yes
++checking for msgfmt... /usr/bin/msgfmt
++checking for gmsgfmt... /usr/bin/msgfmt
++checking for xgettext... /usr/bin/xgettext
++checking for msgmerge... /usr/bin/msgmerge
++checking for long double... yes
++checking for long long... yes
++checking size of long long... 8
++checking size of void *... 8
++checking size of long... 8
++checking alloca.h usability... yes
++checking alloca.h presence... yes
++checking for alloca.h... yes
++checking stddef.h usability... yes
++checking stddef.h presence... yes
++checking for stddef.h... yes
++checking for string.h... (cached) yes
++checking for strings.h... (cached) yes
++checking for stdlib.h... (cached) yes
++checking time.h usability... yes
++checking time.h presence... yes
++checking for time.h... yes
++checking for unistd.h... (cached) yes
++checking wchar.h usability... yes
++checking wchar.h presence... yes
++checking for wchar.h... yes
++checking wctype.h usability... yes
++checking wctype.h presence... yes
++checking for wctype.h... yes
++checking fcntl.h usability... yes
++checking fcntl.h presence... yes
++checking for fcntl.h... yes
++checking sys/file.h usability... yes
++checking sys/file.h presence... yes
++checking for sys/file.h... yes
++checking sys/time.h usability... yes
++checking sys/time.h presence... yes
++checking for sys/time.h... yes
++checking for sys/stat.h... (cached) yes
++checking sys/resource.h usability... yes
++checking sys/resource.h presence... yes
++checking for sys/resource.h... yes
++looking for a compliant stdint.h in stdint.h, checking for uintmax_t... yes
++checking for uintptr_t... yes
++checking for int_least32_t... yes
++checking for int_fast32_t... yes
++checking for uint64_t... yes
++checking what to include in bfd_stdint.h... stdint.h (already complete)
++checking whether time.h and sys/time.h may both be included... yes
++checking for dirent.h that defines DIR... yes
++checking for library containing opendir... none required
++checking whether string.h and strings.h may both be included... yes
++checking for fcntl... yes
++checking for getpagesize... yes
++checking for setitimer... yes
++checking for sysconf... yes
++checking for fdopen... yes
++checking for getuid... yes
++checking for getgid... yes
++checking for fileno... yes
++checking for fls... no
++checking for strtoull... yes
++checking for getrlimit... yes
++checking whether basename is declared... yes
++checking whether ftello is declared... yes
++checking whether ftello64 is declared... yes
++checking whether fseeko is declared... yes
++checking whether fseeko64 is declared... yes
++checking whether ffs is declared... yes
++checking whether free is declared... yes
++checking whether getenv is declared... yes
++checking whether malloc is declared... yes
++checking whether realloc is declared... yes
++checking whether stpcpy is declared... yes
++checking whether strstr is declared... yes
++checking whether asprintf is declared... yes
++checking whether vasprintf is declared... yes
++checking whether snprintf is declared... yes
++checking whether vsnprintf is declared... yes
++checking whether strnlen is declared... yes
++checking compiler support for hidden visibility... yes
++checking linker --as-needed support... yes
++checking for cos in -lm... yes
++checking for gcc version with buggy 64-bit support... no
++checking for ftello... yes
++checking for ftello64... yes
++checking for fseeko... yes
++checking for fseeko64... yes
++checking for fopen64... yes
++checking size of off_t... 8
++checking file_ptr type... BFD_HOST_64_BIT
++checking for stdlib.h... (cached) yes
++checking for unistd.h... (cached) yes
++checking for sys/param.h... yes
++checking for getpagesize... (cached) yes
++checking for working mmap... yes
++checking for madvise... yes
++checking for mprotect... yes
++configure: updating cache ./config.cache
++checking that generated files are newer than configure... done
++configure: creating ./config.status
++config.status: creating Makefile
++config.status: creating doc/Makefile
++config.status: creating bfd-in3.h
++config.status: creating po/Makefile.in
++config.status: creating config.h
++config.status: executing depfiles commands
++config.status: executing libtool commands
++config.status: executing default-1 commands
++config.status: executing bfd_stdint.h commands
++config.status: executing default commands
++make[2]: Entering directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/libiberty'
++if [ x"" != x ] && [ ! -d pic ]; then \
++  mkdir pic; \
++else true; fi
++touch stamp-picdir
++if [ x"" != x ] && [ ! -d noasan ]; then \
++  mkdir noasan; \
++else true; fi
++touch stamp-noasandir
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/regex.c -o pic/regex.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/regex.c -o noasan/regex.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/regex.c -o regex.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/cplus-dem.c -o pic/cplus-dem.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/cplus-dem.c -o noasan/cplus-dem.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/cplus-dem.c -o cplus-dem.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/cp-demangle.c -o pic/cp-demangle.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/cp-demangle.c -o noasan/cp-demangle.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/cp-demangle.c -o cp-demangle.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/md5.c -o pic/md5.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/md5.c -o noasan/md5.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/md5.c -o md5.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/sha1.c -o pic/sha1.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/sha1.c -o noasan/sha1.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/sha1.c -o sha1.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/alloca.c -o pic/alloca.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/alloca.c -o noasan/alloca.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/alloca.c -o alloca.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/argv.c -o pic/argv.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/argv.c -o noasan/argv.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/argv.c -o argv.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/choose-temp.c -o pic/choose-temp.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/choose-temp.c -o noasan/choose-temp.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/choose-temp.c -o choose-temp.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/concat.c -o pic/concat.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/concat.c -o noasan/concat.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/concat.c -o concat.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/cp-demint.c -o pic/cp-demint.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/cp-demint.c -o noasan/cp-demint.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/cp-demint.c -o cp-demint.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/crc32.c -o pic/crc32.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/crc32.c -o noasan/crc32.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/crc32.c -o crc32.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/d-demangle.c -o pic/d-demangle.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/d-demangle.c -o noasan/d-demangle.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/d-demangle.c -o d-demangle.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/dwarfnames.c -o pic/dwarfnames.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/dwarfnames.c -o noasan/dwarfnames.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/dwarfnames.c -o dwarfnames.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/dyn-string.c -o pic/dyn-string.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/dyn-string.c -o noasan/dyn-string.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/dyn-string.c -o dyn-string.o
++../../libiberty/dyn-string.c: In function ‘dyn_string_insert_cstr’:
++../../libiberty/dyn-string.c:280:3: warning: ‘strncpy’ output truncated before terminating nul copying as many bytes from a string as its length [-Wstringop-truncation]
++  280 |   strncpy (dest->s + pos, src, length);
++      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++../../libiberty/dyn-string.c:272:16: note: length computed here
++  272 |   int length = strlen (src);
++      |                ^~~~~~~~~~~~
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/fdmatch.c -o pic/fdmatch.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/fdmatch.c -o noasan/fdmatch.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/fdmatch.c -o fdmatch.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/fibheap.c -o pic/fibheap.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/fibheap.c -o noasan/fibheap.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/fibheap.c -o fibheap.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/filename_cmp.c -o pic/filename_cmp.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/filename_cmp.c -o noasan/filename_cmp.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/filename_cmp.c -o filename_cmp.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/floatformat.c -o pic/floatformat.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/floatformat.c -o noasan/floatformat.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/floatformat.c -o floatformat.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/fnmatch.c -o pic/fnmatch.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/fnmatch.c -o noasan/fnmatch.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/fnmatch.c -o fnmatch.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/fopen_unlocked.c -o pic/fopen_unlocked.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/fopen_unlocked.c -o noasan/fopen_unlocked.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/fopen_unlocked.c -o fopen_unlocked.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/getopt.c -o pic/getopt.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/getopt.c -o noasan/getopt.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/getopt.c -o getopt.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/getopt1.c -o pic/getopt1.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/getopt1.c -o noasan/getopt1.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/getopt1.c -o getopt1.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/getpwd.c -o pic/getpwd.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/getpwd.c -o noasan/getpwd.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/getpwd.c -o getpwd.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/getruntime.c -o pic/getruntime.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/getruntime.c -o noasan/getruntime.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/getruntime.c -o getruntime.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/hashtab.c -o pic/hashtab.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/hashtab.c -o noasan/hashtab.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/hashtab.c -o hashtab.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/hex.c -o pic/hex.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/hex.c -o noasan/hex.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/hex.c -o hex.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/lbasename.c -o pic/lbasename.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/lbasename.c -o noasan/lbasename.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/lbasename.c -o lbasename.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/lrealpath.c -o pic/lrealpath.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/lrealpath.c -o noasan/lrealpath.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/lrealpath.c -o lrealpath.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/make-relative-prefix.c -o pic/make-relative-prefix.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/make-relative-prefix.c -o noasan/make-relative-prefix.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/make-relative-prefix.c -o make-relative-prefix.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/make-temp-file.c -o pic/make-temp-file.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/make-temp-file.c -o noasan/make-temp-file.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/make-temp-file.c -o make-temp-file.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/objalloc.c -o pic/objalloc.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/objalloc.c -o noasan/objalloc.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/objalloc.c -o objalloc.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/obstack.c -o pic/obstack.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/obstack.c -o noasan/obstack.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/obstack.c -o obstack.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/partition.c -o pic/partition.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/partition.c -o noasan/partition.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/partition.c -o partition.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/pexecute.c -o pic/pexecute.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/pexecute.c -o noasan/pexecute.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/pexecute.c -o pexecute.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/physmem.c -o pic/physmem.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/physmem.c -o noasan/physmem.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/physmem.c -o physmem.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/pex-common.c -o pic/pex-common.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/pex-common.c -o noasan/pex-common.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/pex-common.c -o pex-common.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/pex-one.c -o pic/pex-one.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/pex-one.c -o noasan/pex-one.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/pex-one.c -o pex-one.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/pex-unix.c -o pic/pex-unix.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/pex-unix.c -o noasan/pex-unix.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/pex-unix.c -o pex-unix.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/vprintf-support.c -o pic/vprintf-support.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/vprintf-support.c -o noasan/vprintf-support.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/vprintf-support.c -o vprintf-support.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/rust-demangle.c -o pic/rust-demangle.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/rust-demangle.c -o noasan/rust-demangle.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/rust-demangle.c -o rust-demangle.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/safe-ctype.c -o pic/safe-ctype.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/safe-ctype.c -o noasan/safe-ctype.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/safe-ctype.c -o safe-ctype.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/simple-object.c -o pic/simple-object.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/simple-object.c -o noasan/simple-object.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/simple-object.c -o simple-object.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/simple-object-coff.c -o pic/simple-object-coff.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/simple-object-coff.c -o noasan/simple-object-coff.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/simple-object-coff.c -o simple-object-coff.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/simple-object-elf.c -o pic/simple-object-elf.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/simple-object-elf.c -o noasan/simple-object-elf.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/simple-object-elf.c -o simple-object-elf.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/simple-object-mach-o.c -o pic/simple-object-mach-o.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/simple-object-mach-o.c -o noasan/simple-object-mach-o.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/simple-object-mach-o.c -o simple-object-mach-o.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/simple-object-xcoff.c -o pic/simple-object-xcoff.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/simple-object-xcoff.c -o noasan/simple-object-xcoff.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/simple-object-xcoff.c -o simple-object-xcoff.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/sort.c -o pic/sort.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/sort.c -o noasan/sort.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/sort.c -o sort.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/spaces.c -o pic/spaces.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/spaces.c -o noasan/spaces.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/spaces.c -o spaces.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/splay-tree.c -o pic/splay-tree.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/splay-tree.c -o noasan/splay-tree.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/splay-tree.c -o splay-tree.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/stack-limit.c -o pic/stack-limit.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/stack-limit.c -o noasan/stack-limit.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/stack-limit.c -o stack-limit.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/strerror.c -o pic/strerror.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/strerror.c -o noasan/strerror.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/strerror.c -o strerror.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/strsignal.c -o pic/strsignal.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/strsignal.c -o noasan/strsignal.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/strsignal.c -o strsignal.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/timeval-utils.c -o pic/timeval-utils.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/timeval-utils.c -o noasan/timeval-utils.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/timeval-utils.c -o timeval-utils.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/unlink-if-ordinary.c -o pic/unlink-if-ordinary.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/unlink-if-ordinary.c -o noasan/unlink-if-ordinary.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/unlink-if-ordinary.c -o unlink-if-ordinary.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xasprintf.c -o pic/xasprintf.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xasprintf.c -o noasan/xasprintf.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xasprintf.c -o xasprintf.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xatexit.c -o pic/xatexit.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xatexit.c -o noasan/xatexit.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xatexit.c -o xatexit.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xexit.c -o pic/xexit.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xexit.c -o noasan/xexit.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xexit.c -o xexit.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xmalloc.c -o pic/xmalloc.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xmalloc.c -o noasan/xmalloc.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xmalloc.c -o xmalloc.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xmemdup.c -o pic/xmemdup.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xmemdup.c -o noasan/xmemdup.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xmemdup.c -o xmemdup.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xstrdup.c -o pic/xstrdup.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xstrdup.c -o noasan/xstrdup.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xstrdup.c -o xstrdup.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xstrerror.c -o pic/xstrerror.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xstrerror.c -o noasan/xstrerror.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xstrerror.c -o xstrerror.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xstrndup.c -o pic/xstrndup.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xstrndup.c -o noasan/xstrndup.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xstrndup.c -o xstrndup.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/xvasprintf.c -o pic/xvasprintf.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/xvasprintf.c -o noasan/xvasprintf.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/xvasprintf.c -o xvasprintf.o
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE  ../../libiberty/setproctitle.c -o pic/setproctitle.o; \
++else true; fi
++if [ x"" != x ]; then \
++  gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE   ../../libiberty/setproctitle.c -o noasan/setproctitle.o; \
++else true; fi
++gcc -c -DHAVE_CONFIG_H -g -O2  -I. -I../../libiberty/../include  -W -Wall -Wwrite-strings -Wc++-compat -Wstrict-prototypes -Wshadow=local -pedantic  -D_GNU_SOURCE ../../libiberty/setproctitle.c -o setproctitle.o
++rm -f ./libiberty.a pic/./libiberty.a noasan/./libiberty.a
++ar rc ./libiberty.a \
++  ./regex.o ./cplus-dem.o ./cp-demangle.o ./md5.o ./sha1.o ./alloca.o ./argv.o ./choose-temp.o ./concat.o ./cp-demint.o ./crc32.o ./d-demangle.o ./dwarfnames.o ./dyn-string.o ./fdmatch.o ./fibheap.o ./filename_cmp.o ./floatformat.o ./fnmatch.o ./fopen_unlocked.o ./getopt.o ./getopt1.o ./getpwd.o ./getruntime.o ./hashtab.o ./hex.o ./lbasename.o ./lrealpath.o ./make-relative-prefix.o ./make-temp-file.o ./objalloc.o ./obstack.o ./partition.o ./pexecute.o ./physmem.o ./pex-common.o ./pex-one.o ./pex-unix.o ./vprintf-support.o ./rust-demangle.o ./safe-ctype.o ./simple-object.o ./simple-object-coff.o ./simple-object-elf.o ./simple-object-mach-o.o ./simple-object-xcoff.o ./sort.o ./spaces.o ./splay-tree.o ./stack-limit.o ./strerror.o ./strsignal.o ./timeval-utils.o ./unlink-if-ordinary.o ./xasprintf.o ./xatexit.o ./xexit.o ./xmalloc.o ./xmemdup.o ./xstrdup.o ./xstrerror.o ./xstrndup.o ./xvasprintf.o  ./setproctitle.o
++ranlib ./libiberty.a
++if [ x"" != x ]; then \
++  cd pic; \
++  ar rc ./libiberty.a \
++    ./regex.o ./cplus-dem.o ./cp-demangle.o ./md5.o ./sha1.o ./alloca.o ./argv.o ./choose-temp.o ./concat.o ./cp-demint.o ./crc32.o ./d-demangle.o ./dwarfnames.o ./dyn-string.o ./fdmatch.o ./fibheap.o ./filename_cmp.o ./floatformat.o ./fnmatch.o ./fopen_unlocked.o ./getopt.o ./getopt1.o ./getpwd.o ./getruntime.o ./hashtab.o ./hex.o ./lbasename.o ./lrealpath.o ./make-relative-prefix.o ./make-temp-file.o ./objalloc.o ./obstack.o ./partition.o ./pexecute.o ./physmem.o ./pex-common.o ./pex-one.o ./pex-unix.o ./vprintf-support.o ./rust-demangle.o ./safe-ctype.o ./simple-object.o ./simple-object-coff.o ./simple-object-elf.o ./simple-object-mach-o.o ./simple-object-xcoff.o ./sort.o ./spaces.o ./splay-tree.o ./stack-limit.o ./strerror.o ./strsignal.o ./timeval-utils.o ./unlink-if-ordinary.o ./xasprintf.o ./xatexit.o ./xexit.o ./xmalloc.o ./xmemdup.o ./xstrdup.o ./xstrerror.o ./xstrndup.o ./xvasprintf.o  ./setproctitle.o; \
++  ranlib ./libiberty.a; \
++  cd ..; \
++else true; fi; \
++if [ x"" != x ]; then \
++  cd noasan; \
++  ar rc ./libiberty.a \
++    ./regex.o ./cplus-dem.o ./cp-demangle.o ./md5.o ./sha1.o ./alloca.o ./argv.o ./choose-temp.o ./concat.o ./cp-demint.o ./crc32.o ./d-demangle.o ./dwarfnames.o ./dyn-string.o ./fdmatch.o ./fibheap.o ./filename_cmp.o ./floatformat.o ./fnmatch.o ./fopen_unlocked.o ./getopt.o ./getopt1.o ./getpwd.o ./getruntime.o ./hashtab.o ./hex.o ./lbasename.o ./lrealpath.o ./make-relative-prefix.o ./make-temp-file.o ./objalloc.o ./obstack.o ./partition.o ./pexecute.o ./physmem.o ./pex-common.o ./pex-one.o ./pex-unix.o ./vprintf-support.o ./rust-demangle.o ./safe-ctype.o ./simple-object.o ./simple-object-coff.o ./simple-object-elf.o ./simple-object-mach-o.o ./simple-object-xcoff.o ./sort.o ./spaces.o ./splay-tree.o ./stack-limit.o ./strerror.o ./strsignal.o ./timeval-utils.o ./unlink-if-ordinary.o ./xasprintf.o ./xatexit.o ./xexit.o ./xmalloc.o ./xmemdup.o ./xstrdup.o ./xstrerror.o ./xstrndup.o ./xvasprintf.o  ./setproctitle.o; \
++  ranlib ./libiberty.a; \
++  cd ..; \
++else true; fi
++echo ./regex.o ./cplus-dem.o ./cp-demangle.o ./md5.o ./sha1.o ./alloca.o ./argv.o ./choose-temp.o ./concat.o ./cp-demint.o ./crc32.o ./d-demangle.o ./dwarfnames.o ./dyn-string.o ./fdmatch.o ./fibheap.o ./filename_cmp.o ./floatformat.o ./fnmatch.o ./fopen_unlocked.o ./getopt.o ./getopt1.o ./getpwd.o ./getruntime.o ./hashtab.o ./hex.o ./lbasename.o ./lrealpath.o ./make-relative-prefix.o ./make-temp-file.o ./objalloc.o ./obstack.o ./partition.o ./pexecute.o ./physmem.o ./pex-common.o ./pex-one.o ./pex-unix.o ./vprintf-support.o ./rust-demangle.o ./safe-ctype.o ./simple-object.o ./simple-object-coff.o ./simple-object-elf.o ./simple-object-mach-o.o ./simple-object-xcoff.o ./sort.o ./spaces.o ./splay-tree.o ./stack-limit.o ./strerror.o ./strsignal.o ./timeval-utils.o ./unlink-if-ordinary.o ./xasprintf.o ./xatexit.o ./xexit.o ./xmalloc.o ./xmemdup.o ./xstrdup.o ./xstrerror.o ./xstrndup.o ./xvasprintf.o > required-list
++make[3]: Entering directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/libiberty/testsuite'
++make[3]: Nothing to be done for 'all'.
++make[3]: Leaving directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/libiberty/testsuite'
++make[2]: Leaving directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/libiberty'
++make[2]: Entering directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/intl'
++make[2]: Nothing to be done for 'all'.
++make[2]: Leaving directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/intl'
++mkdir -p -- ./zlib
++Configuring in ./zlib
++configure: creating cache ./config.cache
++checking build system type... x86_64-pc-linux-gnu
++checking host system type... x86_64-pc-linux-gnu
++checking target system type... moxie-unknown-elf
++checking for a BSD-compatible install... /usr/bin/install -c
++checking whether build environment is sane... yes
++checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
++checking for gawk... gawk
++checking whether make sets $(MAKE)... yes
++checking whether make supports nested variables... yes
++checking whether to enable maintainer-specific portions of Makefiles... no
++checking for x86_64-pc-linux-gnu-gcc... gcc
++checking whether the C compiler works... yes
++checking for C compiler default output file name... a.out
++checking for suffix of executables... 
++checking whether we are cross compiling... no
++checking for suffix of object files... o
++checking whether we are using the GNU C compiler... yes
++checking whether gcc accepts -g... yes
++checking for gcc option to accept ISO C89... none needed
++checking whether gcc understands -c and -o together... yes
++checking for style of include used by make... GNU
++checking dependency style of gcc... gcc3
++checking how to print strings... printf
++checking for a sed that does not truncate output... /usr/bin/sed
++checking for grep that handles long lines and -e... /usr/bin/grep
++checking for egrep... /usr/bin/grep -E
++checking for fgrep... /usr/bin/grep -F
++checking for ld used by gcc... ld
++checking if the linker (ld) is GNU ld... yes
++checking for BSD- or MS-compatible name lister (nm)... nm
++checking the name lister (nm) interface... BSD nm
++checking whether ln -s works... yes
++checking the maximum length of command line arguments... 1572864
++checking whether the shell understands some XSI constructs... yes
++checking whether the shell understands "+="... yes
++checking for ld option to reload object files... -r
++checking for x86_64-pc-linux-gnu-objdump... objdump
++checking how to recognize dependent libraries... pass_all
++checking for x86_64-pc-linux-gnu-ar... ar
++checking for x86_64-pc-linux-gnu-strip... no
++checking for strip... strip
++checking for x86_64-pc-linux-gnu-ranlib... ranlib
++checking command to parse nm output from gcc object... ok
++checking how to run the C preprocessor... gcc -E
++checking for ANSI C header files... yes
++checking for sys/types.h... yes
++checking for sys/stat.h... yes
++checking for stdlib.h... yes
++checking for string.h... yes
++checking for memory.h... yes
++checking for strings.h... yes
++checking for inttypes.h... yes
++checking for stdint.h... yes
++checking for unistd.h... yes
++checking for dlfcn.h... yes
++checking for objdir... .libs
++checking if gcc supports -fno-rtti -fno-exceptions... no
++checking for gcc option to produce PIC... -fPIC -DPIC
++checking if gcc PIC flag -fPIC -DPIC works... yes
++checking if gcc static flag -static works... yes
++checking if gcc supports -c -o file.o... yes
++checking if gcc supports -c -o file.o... (cached) yes
++checking whether the gcc linker (ld -m elf_x86_64) supports shared libraries... yes
++checking whether -lc should be explicitly linked in... no
++checking dynamic linker characteristics... GNU/Linux ld.so
++checking how to hardcode library paths into programs... immediate
++checking whether stripping libraries is possible... yes
++checking if libtool supports shared libraries... yes
++checking whether to build shared libraries... yes
++checking whether to build static libraries... yes
++checking how to run the C preprocessor... gcc -E
++checking for stdlib.h... (cached) yes
++checking for unistd.h... (cached) yes
++checking for sys/param.h... yes
++checking for getpagesize... yes
++checking for working mmap... yes
++checking for memcpy... yes
++checking for strerror... yes
++checking for unistd.h... (cached) yes
++configure: updating cache ./config.cache
++checking that generated files are newer than configure... done
++configure: creating ./config.status
++config.status: creating Makefile
++config.status: executing depfiles commands
++config.status: executing libtool commands
++make[2]: Entering directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/zlib'
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-adler32.o -MD -MP -MF .deps/libz_a-adler32.Tpo -c -o libz_a-adler32.o `test -f 'adler32.c' || echo '../../zlib/'`adler32.c
++mv -f .deps/libz_a-adler32.Tpo .deps/libz_a-adler32.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-compress.o -MD -MP -MF .deps/libz_a-compress.Tpo -c -o libz_a-compress.o `test -f 'compress.c' || echo '../../zlib/'`compress.c
++mv -f .deps/libz_a-compress.Tpo .deps/libz_a-compress.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-crc32.o -MD -MP -MF .deps/libz_a-crc32.Tpo -c -o libz_a-crc32.o `test -f 'crc32.c' || echo '../../zlib/'`crc32.c
++mv -f .deps/libz_a-crc32.Tpo .deps/libz_a-crc32.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-deflate.o -MD -MP -MF .deps/libz_a-deflate.Tpo -c -o libz_a-deflate.o `test -f 'deflate.c' || echo '../../zlib/'`deflate.c
++mv -f .deps/libz_a-deflate.Tpo .deps/libz_a-deflate.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-gzread.o -MD -MP -MF .deps/libz_a-gzread.Tpo -c -o libz_a-gzread.o `test -f 'gzread.c' || echo '../../zlib/'`gzread.c
++mv -f .deps/libz_a-gzread.Tpo .deps/libz_a-gzread.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-gzclose.o -MD -MP -MF .deps/libz_a-gzclose.Tpo -c -o libz_a-gzclose.o `test -f 'gzclose.c' || echo '../../zlib/'`gzclose.c
++mv -f .deps/libz_a-gzclose.Tpo .deps/libz_a-gzclose.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-gzwrite.o -MD -MP -MF .deps/libz_a-gzwrite.Tpo -c -o libz_a-gzwrite.o `test -f 'gzwrite.c' || echo '../../zlib/'`gzwrite.c
++mv -f .deps/libz_a-gzwrite.Tpo .deps/libz_a-gzwrite.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-gzlib.o -MD -MP -MF .deps/libz_a-gzlib.Tpo -c -o libz_a-gzlib.o `test -f 'gzlib.c' || echo '../../zlib/'`gzlib.c
++mv -f .deps/libz_a-gzlib.Tpo .deps/libz_a-gzlib.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-infback.o -MD -MP -MF .deps/libz_a-infback.Tpo -c -o libz_a-infback.o `test -f 'infback.c' || echo '../../zlib/'`infback.c
++mv -f .deps/libz_a-infback.Tpo .deps/libz_a-infback.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-inffast.o -MD -MP -MF .deps/libz_a-inffast.Tpo -c -o libz_a-inffast.o `test -f 'inffast.c' || echo '../../zlib/'`inffast.c
++mv -f .deps/libz_a-inffast.Tpo .deps/libz_a-inffast.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-inflate.o -MD -MP -MF .deps/libz_a-inflate.Tpo -c -o libz_a-inflate.o `test -f 'inflate.c' || echo '../../zlib/'`inflate.c
++mv -f .deps/libz_a-inflate.Tpo .deps/libz_a-inflate.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-inftrees.o -MD -MP -MF .deps/libz_a-inftrees.Tpo -c -o libz_a-inftrees.o `test -f 'inftrees.c' || echo '../../zlib/'`inftrees.c
++mv -f .deps/libz_a-inftrees.Tpo .deps/libz_a-inftrees.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-trees.o -MD -MP -MF .deps/libz_a-trees.Tpo -c -o libz_a-trees.o `test -f 'trees.c' || echo '../../zlib/'`trees.c
++mv -f .deps/libz_a-trees.Tpo .deps/libz_a-trees.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-uncompr.o -MD -MP -MF .deps/libz_a-uncompr.Tpo -c -o libz_a-uncompr.o `test -f 'uncompr.c' || echo '../../zlib/'`uncompr.c
++mv -f .deps/libz_a-uncompr.Tpo .deps/libz_a-uncompr.Po
++gcc -DPACKAGE_NAME=\"zlib\" -DPACKAGE_TARNAME=\"zlib\" -DPACKAGE_VERSION=\"1.1.4\" -DPACKAGE_STRING=\"zlib\ 1.1.4\" -DPACKAGE_BUGREPORT=\"\" -DPACKAGE_URL=\"\" -DPACKAGE=\"zlib\" -DVERSION=\"1.1.4\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_MEMCPY=1 -DHAVE_STRERROR=1 -DHAVE_UNISTD_H=1 -I. -I../../zlib      -g -O2 -MT libz_a-zutil.o -MD -MP -MF .deps/libz_a-zutil.Tpo -c -o libz_a-zutil.o `test -f 'zutil.c' || echo '../../zlib/'`zutil.c
++mv -f .deps/libz_a-zutil.Tpo .deps/libz_a-zutil.Po
++rm -f libz.a
++ar cru libz.a libz_a-adler32.o libz_a-compress.o libz_a-crc32.o libz_a-deflate.o libz_a-gzread.o libz_a-gzclose.o libz_a-gzwrite.o libz_a-gzlib.o libz_a-infback.o libz_a-inffast.o libz_a-inflate.o libz_a-inftrees.o libz_a-trees.o libz_a-uncompr.o libz_a-zutil.o 
++ar: `u' modifier ignored since `D' is the default (see `U')
++ranlib libz.a
++true "AR_FLAGS=rc" "CC_FOR_BUILD=gcc" "CFLAGS=-g -O2" "CXXFLAGS=-g -O2" "CFLAGS_FOR_BUILD=-g -O2" "CFLAGS_FOR_TARGET=-g -O2" "INSTALL=/usr/bin/install -c" "INSTALL_DATA=/usr/bin/install -c -m 644" "INSTALL_PROGRAM=/usr/bin/install -c" "INSTALL_SCRIPT=/usr/bin/install -c" "LDFLAGS=-static-libstdc++ -static-libgcc " "LIBCFLAGS=-g -O2" "LIBCFLAGS_FOR_TARGET=-g -O2" "MAKE=make" "MAKEINFO=makeinfo --split-size=5000000 --split-size=5000000 " "PICFLAG=" "PICFLAG_FOR_TARGET=" "SHELL=/bin/sh" "EXPECT=expect" "RUNTEST=runtest" "RUNTESTFLAGS=" "exec_prefix=/usr/local" "infodir=/usr/local/share/info" "libdir=/usr/local/lib" "prefix=/usr/local" "tooldir=/usr/local/moxie-elf" "AR=ar" "AS=as" "CC=gcc" "CXX=g++" "LD=ld" "LIBCFLAGS=-g -O2" "NM=nm" "PICFLAG=" "RANLIB=ranlib" "DESTDIR=" DO=all multi-do # make
++make[2]: Leaving directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/zlib'
++make[2]: Entering directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/bfd'
++creating bfdver.h
++rm -f elf32-target.h
++/usr/bin/sed -e s/NN/32/g < ../../bfd/elfxx-target.h > elf32-target.new
++mv -f elf32-target.new elf32-target.h
++rm -f elf64-target.h
++/usr/bin/sed -e s/NN/64/g < ../../bfd/elfxx-target.h > elf64-target.new
++mv -f elf64-target.new elf64-target.h
++rm -f targmatch.h
++/usr/bin/sed -f ../../bfd/targmatch.sed < ../../bfd/config.bfd > targmatch.new
++mv -f targmatch.new targmatch.h
++Making info in doc
++make[3]: Entering directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/bfd/doc'
++gcc -o chw$$ -g -O2 \
++    -I.. -I../../../bfd/doc/.. -I../../../bfd/doc/../../include -I../../../bfd/doc/../../intl -I../../intl ../../../bfd/doc/chew.c; \
++/bin/sh ../../../bfd/doc/../../move-if-change \
++  chw$$ chew; \
++touch chew.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../aoutx.h >aoutx.tmp
++test -e aoutx.texi || test ! -f ../../../bfd/doc/aoutx.texi || cp -p ../../../bfd/doc/aoutx.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change aoutx.tmp aoutx.texi
++touch aoutx.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../archive.c >archive.tmp
++test -e archive.texi || test ! -f ../../../bfd/doc/archive.texi || cp -p ../../../bfd/doc/archive.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change archive.tmp archive.texi
++touch archive.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../archures.c >archures.tmp
++test -e archures.texi || test ! -f ../../../bfd/doc/archures.texi || cp -p ../../../bfd/doc/archures.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change archures.tmp archures.texi
++touch archures.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../bfd.c >bfd.tmp
++test -e bfdt.texi || test ! -f ../../../bfd/doc/bfdt.texi || cp -p ../../../bfd/doc/bfdt.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change bfd.tmp bfdt.texi
++touch bfdt.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../cache.c >cache.tmp
++test -e cache.texi || test ! -f ../../../bfd/doc/cache.texi || cp -p ../../../bfd/doc/cache.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change cache.tmp cache.texi
++touch cache.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../coffcode.h >coffcode.tmp
++test -e coffcode.texi || test ! -f ../../../bfd/doc/coffcode.texi || cp -p ../../../bfd/doc/coffcode.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change coffcode.tmp coffcode.texi
++touch coffcode.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../corefile.c >core.tmp
++test -e core.texi || test ! -f ../../../bfd/doc/core.texi || cp -p ../../../bfd/doc/core.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change core.tmp core.texi
++touch core.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../elf.c >elf.tmp
++test -e elf.texi || test ! -f ../../../bfd/doc/elf.texi || cp -p ../../../bfd/doc/elf.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change elf.tmp elf.texi
++touch elf.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../elfcode.h >elfcode.tmp
++test -e elfcode.texi || test ! -f ../../../bfd/doc/elfcode.texi || cp -p ../../../bfd/doc/elfcode.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change elfcode.tmp elfcode.texi
++touch elfcode.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../format.c >format.tmp
++test -e format.texi || test ! -f ../../../bfd/doc/format.texi || cp -p ../../../bfd/doc/format.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change format.tmp format.texi
++touch format.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../libbfd.c >libbfd.tmp
++test -e libbfd.texi || test ! -f ../../../bfd/doc/libbfd.texi || cp -p ../../../bfd/doc/libbfd.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change libbfd.tmp libbfd.texi
++touch libbfd.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../bfdwin.c >bfdwin.tmp
++test -e bfdwin.texi || test ! -f ../../../bfd/doc/bfdwin.texi || cp -p ../../../bfd/doc/bfdwin.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change bfdwin.tmp bfdwin.texi
++touch bfdwin.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../bfdio.c >bfdio.tmp
++test -e bfdio.texi || test ! -f ../../../bfd/doc/bfdio.texi || cp -p ../../../bfd/doc/bfdio.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change bfdio.tmp bfdio.texi
++touch bfdio.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../opncls.c >opncls.tmp
++test -e opncls.texi || test ! -f ../../../bfd/doc/opncls.texi || cp -p ../../../bfd/doc/opncls.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change opncls.tmp opncls.texi
++touch opncls.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../reloc.c >reloc.tmp
++test -e reloc.texi || test ! -f ../../../bfd/doc/reloc.texi || cp -p ../../../bfd/doc/reloc.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change reloc.tmp reloc.texi
++touch reloc.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../section.c >section.tmp
++test -e section.texi || test ! -f ../../../bfd/doc/section.texi || cp -p ../../../bfd/doc/section.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change section.tmp section.texi
++touch section.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../syms.c >syms.tmp
++test -e syms.texi || test ! -f ../../../bfd/doc/syms.texi || cp -p ../../../bfd/doc/syms.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change syms.tmp syms.texi
++touch syms.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../targets.c >targets.tmp
++test -e targets.texi || test ! -f ../../../bfd/doc/targets.texi || cp -p ../../../bfd/doc/targets.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change targets.tmp targets.texi
++touch targets.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../init.c >init.tmp
++test -e init.texi || test ! -f ../../../bfd/doc/init.texi || cp -p ../../../bfd/doc/init.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change init.tmp init.texi
++touch init.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../hash.c >hash.tmp
++test -e hash.texi || test ! -f ../../../bfd/doc/hash.texi || cp -p ../../../bfd/doc/hash.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change hash.tmp hash.texi
++touch hash.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../linker.c >linker.tmp
++test -e linker.texi || test ! -f ../../../bfd/doc/linker.texi || cp -p ../../../bfd/doc/linker.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change linker.tmp linker.texi
++touch linker.stamp
++./chew -f ../../../bfd/doc/doc.str < ../../../bfd/doc/../mmo.c >mmo.tmp
++test -e mmo.texi || test ! -f ../../../bfd/doc/mmo.texi || cp -p ../../../bfd/doc/mmo.texi .
++/bin/sh ../../../bfd/doc/../../move-if-change mmo.tmp mmo.texi
++touch mmo.stamp
++restore=: && backupdir=".am$$" && \
++rm -rf $backupdir && mkdir $backupdir && \
++if (makeinfo --split-size=5000000 --split-size=5000000 --version) >/dev/null 2>&1; then \
++  for f in bfd.info bfd.info-[0-9] bfd.info-[0-9][0-9] bfd.i[0-9] bfd.i[0-9][0-9]; do \
++    if test -f $f; then mv $f $backupdir; restore=mv; else :; fi; \
++  done; \
++else :; fi && \
++if makeinfo --split-size=5000000 --split-size=5000000   -I ../../../bfd/doc \
++ -o bfd.info `test -f 'bfd.texi' || echo '../../../bfd/doc/'`bfd.texi; \
++then \
++  rc=0; \
++else \
++  rc=$?; \
++  $restore $backupdir/* `echo "./bfd.info" | sed 's|[^/]*$||'`; \
++fi; \
++rm -rf $backupdir; exit $rc
++./reloc.texi:4478: @subsubsection seen before @end deffn
++make[3]: *** [Makefile:541: bfd.info] Error 1
++make[3]: Leaving directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/bfd/doc'
++make[2]: *** [Makefile:1647: info-recursive] Error 1
++make[2]: Leaving directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build/bfd'
++make[1]: *** [Makefile:2690: all-bfd] Error 2
++make[1]: Leaving directory '/home/joey/adelie/adelie-gcc/binutils-2.32/build'
++make: *** [Makefile:849: all] Error 2
+diff --git a/adelie-gcc/binutils-2.32/config.sub b/adelie-gcc/binutils-2.32/config.sub
+index 75bb6a313..eb4c32482 100755
+--- a/adelie-gcc/binutils-2.32/config.sub
++++ b/adelie-gcc/binutils-2.32/config.sub
+@@ -1212,6 +1212,7 @@ case $cpu-$vendor in
+ 			| mipstx39 | mipstx39el \
+ 			| mmix \
+ 			| mn10200 | mn10300 \
++			| adelie \
+ 			| moxie \
+ 			| mt \
+ 			| msp430 \
+diff --git a/adelie-gcc/binutils-2.32/configure b/adelie-gcc/binutils-2.32/configure
+index 374764596..cd24bcf83 100755
+--- a/adelie-gcc/binutils-2.32/configure
++++ b/adelie-gcc/binutils-2.32/configure
+@@ -3709,6 +3709,10 @@ case "${target}" in
+   ft32-*-*)
+     noconfigdirs="$noconfigdirs target-rda gprof"
+     ;;
++  adelie-*-*)
++    noconfigdirs="$noconfigdirs gdb sim"
++    noconfigdirs="$noconfigdirs bfd binutils opcodes gas ld gprof"
++    ;;
+   moxie-*-*)
+     noconfigdirs="$noconfigdirs"
+     ;;
+diff --git a/adelie-gcc/binutils-2.32/configure.ac b/adelie-gcc/binutils-2.32/configure.ac
+index 279b655a2..bca61c349 100644
+--- a/adelie-gcc/binutils-2.32/configure.ac
++++ b/adelie-gcc/binutils-2.32/configure.ac
+@@ -1006,6 +1006,10 @@ case "${target}" in
+   ft32-*-*)
+     noconfigdirs="$noconfigdirs target-rda gprof"
+     ;;
++  adelie-*-*)
++    noconfigdirs="$noconfigdirs gdb sim"
++    noconfigdirs="$noconfigdirs bfd binutils opcodes gas ld gprof"
++    ;;
+   moxie-*-*)
+     noconfigdirs="$noconfigdirs"
+     ;;
+diff --git a/adelie-gcc/binutils-2.32/include/elf/adelie.h b/adelie-gcc/binutils-2.32/include/elf/adelie.h
+new file mode 100644
+index 000000000..4d2d71375
+--- /dev/null
++++ b/adelie-gcc/binutils-2.32/include/elf/adelie.h
+@@ -0,0 +1,34 @@
++/* Adelie ELF support for BFD.
++
++   Copied from include/elf/moxie.h
++   Copyright (C) 2009-2019 Free Software Foundation, Inc.
++
++   This file is part of BFD, the Binary File Descriptor library.
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program; if not, write to the Free Software Foundation,
++   Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
++
++#ifndef _ELF_ADELIE_H
++#define _ELF_ADELIE_H
++
++#include "elf/reloc-macros.h"
++
++/* Relocation types.  */
++START_RELOC_NUMBERS (elf_adelie_reloc_type)
++  RELOC_NUMBER (R_ADELIE_NONE, 0)
++//   RELOC_NUMBER (R_MOXIE_32, 1)
++//   RELOC_NUMBER (R_MOXIE_PCREL10, 2)
++END_RELOC_NUMBERS (R_ADELIE_max)
++
++#endif /* _ELF_ADELIE_H */
+diff --git a/adelie-gcc/binutils-2.32/include/elf/common.h b/adelie-gcc/binutils-2.32/include/elf/common.h
+index 996acf970..3159ff6ba 100644
+--- a/adelie-gcc/binutils-2.32/include/elf/common.h
++++ b/adelie-gcc/binutils-2.32/include/elf/common.h
+@@ -390,6 +390,9 @@
+ /* Ubicom IP2xxx;   Written in the absense of an ABI.  */
+ #define EM_IP2K_OLD		0x8217
+ 
++/* Adelie backend. */
++#define EM_ADELIE 0x8BC3
++
+ /* Cygnus PowerPC ELF backend.  Written in the absence of an ABI.  */
+ #define EM_CYGNUS_POWERPC	0x9025
+ 
+diff --git a/adelie-gcc/grep-adelie b/adelie-gcc/grep-adelie
+new file mode 100644
+index 000000000..dd5fc9c2b
+--- /dev/null
++++ b/adelie-gcc/grep-adelie
+@@ -0,0 +1,54 @@
++./binutils-2.32/bfd/bfd-in2.h:  bfd_arch_adelie,    /* The Adelie processor. */
++./binutils-2.32/bfd/bfd-in2.h:#define bfd_mach_adelie
++./binutils-2.32/bfd/Makefile.in:	cpu-adelie.lo \
++./binutils-2.32/bfd/Makefile.in:	cpu-adelie.c \
++./binutils-2.32/bfd/Makefile.in:	elf32-adelie.lo \
++./binutils-2.32/bfd/Makefile.in:	elf32-adelie.c \
++./binutils-2.32/bfd/Makefile.in:@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-adelie.Plo@am__quote@
++./binutils-2.32/bfd/Makefile.in:@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-adelie.Plo@am__quote@
++./binutils-2.32/bfd/config.bfd:  adelie-*-elf)
++./binutils-2.32/bfd/config.bfd:    targ_defvec=adelie_elf32_be_vec
++./binutils-2.32/bfd/config.bfd:    targ_selvecs=adelie_elf32_le_vec
++./binutils-2.32/bfd/po/SRC-POTFILES.in:cpu-adelie.c
++./binutils-2.32/bfd/po/SRC-POTFILES.in:elf32-adelie.c
++./binutils-2.32/bfd/elf32-adelie.c:// #include "elf/adelie.h"
++./binutils-2.32/bfd/elf32-adelie.c:#define ELF_ARCH		bfd_arch_adelie
++./binutils-2.32/bfd/elf32-adelie.c:// #define TARGET_BIG_SYM		adelie_elf32_be_vec
++./binutils-2.32/bfd/elf32-adelie.c:#define TARGET_BIG_SYM		bfd_elf32_adelie_vec
++./binutils-2.32/bfd/elf32-adelie.c:#define TARGET_BIG_NAME		"elf32-adelie"
++./binutils-2.32/bfd/elf32-adelie.c:// #define TARGET_LITTLE_SYM	adelie_elf32_le_vec
++./binutils-2.32/bfd/elf32-adelie.c:// #define TARGET_LITTLE_NAME	"elf32-littleadelie"
++./binutils-2.32/bfd/targets.c:extern const bfd_target adelie_elf32_be_vec;
++./binutils-2.32/bfd/targets.c:extern const bfd_target adelie_elf32_le_vec;
++./binutils-2.32/bfd/targets.c:	&adelie_elf32_be_vec,
++./binutils-2.32/bfd/targets.c:	&adelie_elf32_le_vec,
++./binutils-2.32/bfd/configure.ac:    adelie_elf32_be_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
++./binutils-2.32/bfd/configure.ac:    adelie_elf32_le_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
++./binutils-2.32/bfd/configure:    adelie_elf32_le_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
++./binutils-2.32/bfd/configure:    adelie_elf32_be_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
++./binutils-2.32/bfd/cpu-adelie.c:const bfd_arch_info_type bfd_adelie_arch =
++./binutils-2.32/bfd/cpu-adelie.c:    bfd_arch_adelie,   /* enum bfd_architecture arch.  */
++./binutils-2.32/bfd/cpu-adelie.c:    bfd_mach_adelie,
++./binutils-2.32/bfd/cpu-adelie.c:    "adelie",	      /* Arch name.  */
++./binutils-2.32/bfd/cpu-adelie.c:    "adelie",	      /* Printable name.  */
++./binutils-2.32/bfd/archures.c:.  bfd_arch_adelie,    {* The Adelie processor *}
++./binutils-2.32/bfd/archures.c:.#define bfd_mach_adelie  1
++./binutils-2.32/bfd/archures.c:extern const bfd_arch_info_type bfd_adelie_arch;
++./binutils-2.32/bfd/archures.c:    &bfd_adelie_arch,
++./binutils-2.32/bfd/doc/archures.texi:  bfd_arch_adelie,     /* The Adelie processor.  */
++./binutils-2.32/bfd/doc/archures.texi:#define bfd_mach_adelie         1
++./binutils-2.32/bfd/Makefile.am:	cpu-adelie.lo \
++./binutils-2.32/bfd/Makefile.am:	cpu-adelie.c \
++./binutils-2.32/bfd/Makefile.am:	elf32-adelie.lo \
++./binutils-2.32/bfd/Makefile.am:	elf32-adelie.c \
++
++./binutils-2.32/bfd/bfd-in2.h:// ADELIE_TODO I have no idea what this does
++./binutils-2.32/bfd/bfd-in2.h:// BFD_RELOC_ADELIE_10_PCREL,
++./binutils-2.32/bfd/po/bfd.pot:# ADELIE_TODO
++./binutils-2.32/bfd/elf32-adelie.c:// ADELIE_TODO
++./binutils-2.32/bfd/elf32-adelie.c:#define ELF_MACHINE_CODE	EM_ADELIE
++./binutils-2.32/bfd/targets.c:	// ADELIE_TODO
++./binutils-2.32/bfd/libbfd.h:  // ADELIE_TODO
++./binutils-2.32/bfd/libbfd.h:  // "BFD_RELOC_ADELIE_10_PCREL"
++./binutils-2.32/bfd/doc/bfd.info:ADELIE_TODO
++./binutils-2.32/bfd/reloc.c:  ADELIE_TODO Adelie ELF relocations.
+diff --git a/adelie-gcc/grep-moxie b/adelie-gcc/grep-moxie
+new file mode 100644
+index 000000000..06d19a001
+--- /dev/null
++++ b/adelie-gcc/grep-moxie
+@@ -0,0 +1,259 @@
++binutils-2.32/bfd/bfd-in2.h:  bfd_arch_moxie,     /* The moxie processor.  */
++binutils-2.32/bfd/bfd-in2.h:#define bfd_mach_moxie         1
++binutils-2.32/bfd/ChangeLog-2015:	* elf32-moxie.c: Likewise.
++binutils-2.32/bfd/ChangeLog-2015:	* elf32-moxie.c (moxie_info_to_howto_rela): Likewise.
++binutils-2.32/bfd/ChangeLog-2015:	* elf32-moxie.c (moxie_reloc_type_lookup): Likewise.
++binutils-2.32/bfd/ChangeLog-2015:	* elf32-moxie.c (moxie_elf_howto_table): Likewise.
++binutils-2.32/bfd/ChangeLog-2015:2015-01-09  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/ChangeLog-2015:	* elf32-moxie.c (ELF_MACHINE_ALT1): Define.
++binutils-2.32/bfd/Makefile.in:	cpu-moxie.lo \
++binutils-2.32/bfd/Makefile.in:	cpu-moxie.c \
++binutils-2.32/bfd/Makefile.in:	elf32-moxie.lo \
++binutils-2.32/bfd/Makefile.in:	elf32-moxie.c \
++binutils-2.32/bfd/Makefile.in:@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-moxie.Plo@am__quote@
++binutils-2.32/bfd/Makefile.in:@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-moxie.Plo@am__quote@
++binutils-2.32/bfd/config.bfd:  moxie-*-elf | moxie-*-rtems* | moxie-*-uclinux)
++binutils-2.32/bfd/config.bfd:    targ_defvec=moxie_elf32_be_vec
++binutils-2.32/bfd/config.bfd:    targ_selvecs=moxie_elf32_le_vec
++binutils-2.32/bfd/config.bfd:  moxie-*-moxiebox*)
++binutils-2.32/bfd/config.bfd:    targ_defvec=moxie_elf32_le_vec
++binutils-2.32/bfd/po/bfd.pot:#: elf32-microblaze.c:969 elf32-mips.c:2229 elf32-moxie.c:137
++binutils-2.32/bfd/po/bfd.pot:#: elf32-mep.c:526 elf32-metag.c:1990 elf32-microblaze.c:1631 elf32-moxie.c:288
++binutils-2.32/bfd/po/bfd.pot:#: elf32-microblaze.c:1635 elf32-moxie.c:292 elf32-msp430.c:1362
++binutils-2.32/bfd/po/bfd.pot:#: elf32-mep.c:538 elf32-metag.c:2002 elf32-microblaze.c:1643 elf32-moxie.c:300
++binutils-2.32/bfd/po/bfd.pot:#: elf32-moxie.c:296 elf32-msp430.c:1366 elf32-mt.c:406 elf32-or1k.c:1767
++binutils-2.32/bfd/po/SRC-POTFILES.in:cpu-moxie.c
++binutils-2.32/bfd/po/SRC-POTFILES.in:elf32-moxie.c
++binutils-2.32/bfd/po/ja.po:#: elf32-microblaze.c:1231 elf32-moxie.c:282 elf32-msp430.c:486 elf32-mt.c:395
++binutils-2.32/bfd/po/ja.po:#: elf32-microblaze.c:1235 elf32-moxie.c:286 elf32-msp430.c:490
++binutils-2.32/bfd/po/ja.po:#: elf32-microblaze.c:1243 elf32-moxie.c:294 elf32-msp430.c:498 elf32-mt.c:403
++binutils-2.32/bfd/po/ja.po:#: elf32-m32c.c:561 elf32-mep.c:543 elf32-moxie.c:290 elf32-msp430.c:494
++binutils-2.32/bfd/po/uk.po:#: elf32-microblaze.c:969 elf32-mips.c:2229 elf32-moxie.c:137
++binutils-2.32/bfd/po/uk.po:#: elf32-moxie.c:288 elf32-mt.c:402 elf32-nds32.c:6189 elf32-or1k.c:1759
++binutils-2.32/bfd/po/uk.po:#: elf32-microblaze.c:1635 elf32-moxie.c:292 elf32-msp430.c:1362
++binutils-2.32/bfd/po/uk.po:#: elf32-moxie.c:300 elf32-msp430.c:1370 elf32-mt.c:410 elf32-nds32.c:6201
++binutils-2.32/bfd/po/uk.po:#: elf32-moxie.c:296 elf32-msp430.c:1366 elf32-mt.c:406 elf32-or1k.c:1767
++binutils-2.32/bfd/po/zh_CN.po:#: elf32-moxie.c:282 elf32-mt.c:395 elf32-nds32.c:4910 elf32-openrisc.c:404
++binutils-2.32/bfd/po/zh_CN.po:#: elf32-microblaze.c:1564 elf32-moxie.c:286 elf32-msp430.c:1321
++binutils-2.32/bfd/po/zh_CN.po:#: elf32-moxie.c:294 elf32-msp430.c:1329 elf32-mt.c:403 elf32-nds32.c:4922
++binutils-2.32/bfd/po/zh_CN.po:#: elf32-moxie.c:290 elf32-msp430.c:1325 elf32-mt.c:399 elf32-openrisc.c:412
++binutils-2.32/bfd/po/id.po:#: elf32-mep.c:535 elf32-microblaze.c:1231 elf32-moxie.c:282
++binutils-2.32/bfd/po/id.po:#: elf32-microblaze.c:1235 elf32-moxie.c:286 elf32-msp430.c:490
++binutils-2.32/bfd/po/id.po:#: elf32-mep.c:547 elf32-microblaze.c:1243 elf32-moxie.c:294
++binutils-2.32/bfd/po/id.po:#: elf32-iq2000.c:692 elf32-m32c.c:561 elf32-mep.c:543 elf32-moxie.c:290
++binutils-2.32/bfd/po/vi.po:#: elf32-mep.c:535 elf32-microblaze.c:1231 elf32-moxie.c:282
++binutils-2.32/bfd/po/vi.po:#: elf32-microblaze.c:1235 elf32-moxie.c:286 elf32-msp430.c:490
++binutils-2.32/bfd/po/vi.po:#: elf32-mep.c:547 elf32-microblaze.c:1243 elf32-moxie.c:294
++binutils-2.32/bfd/po/vi.po:#: elf32-iq2000.c:692 elf32-m32c.c:561 elf32-mep.c:543 elf32-moxie.c:290
++binutils-2.32/bfd/po/fi.po:#: elf32-moxie.c:282 elf32-mt.c:395 elf32-nds32.c:4910 elf32-openrisc.c:404
++binutils-2.32/bfd/po/fi.po:#: elf32-microblaze.c:1564 elf32-moxie.c:286 elf32-msp430.c:1321
++binutils-2.32/bfd/po/fi.po:#: elf32-moxie.c:294 elf32-msp430.c:1329 elf32-mt.c:403 elf32-nds32.c:4922
++binutils-2.32/bfd/po/fi.po:#: elf32-moxie.c:290 elf32-msp430.c:1325 elf32-mt.c:399 elf32-openrisc.c:412
++binutils-2.32/bfd/po/hr.po:#: elf32-mep.c:535 elf32-microblaze.c:1231 elf32-moxie.c:282
++binutils-2.32/bfd/po/hr.po:#: elf32-microblaze.c:1235 elf32-moxie.c:286 elf32-msp430.c:490
++binutils-2.32/bfd/po/hr.po:#: elf32-mep.c:547 elf32-microblaze.c:1243 elf32-moxie.c:294
++binutils-2.32/bfd/po/hr.po:#: elf32-iq2000.c:692 elf32-m32c.c:561 elf32-mep.c:543 elf32-moxie.c:290
++binutils-2.32/bfd/po/fr.po:#: elf32-microblaze.c:969 elf32-mips.c:2229 elf32-moxie.c:137
++binutils-2.32/bfd/po/fr.po:#: elf32-moxie.c:288 elf32-mt.c:402 elf32-nds32.c:6189 elf32-or1k.c:1759
++binutils-2.32/bfd/po/fr.po:#: elf32-microblaze.c:1635 elf32-moxie.c:292 elf32-msp430.c:1362
++binutils-2.32/bfd/po/fr.po:#: elf32-moxie.c:300 elf32-msp430.c:1370 elf32-mt.c:410 elf32-nds32.c:6201
++binutils-2.32/bfd/po/fr.po:#: elf32-moxie.c:296 elf32-msp430.c:1366 elf32-mt.c:406 elf32-or1k.c:1767
++binutils-2.32/bfd/po/da.po:#: elf32-moxie.c:282 elf32-mt.c:395 elf32-nds32.c:4910 elf32-openrisc.c:404
++binutils-2.32/bfd/po/da.po:#: elf32-microblaze.c:1564 elf32-moxie.c:286 elf32-msp430.c:1321
++binutils-2.32/bfd/po/da.po:#: elf32-moxie.c:294 elf32-msp430.c:1329 elf32-mt.c:403 elf32-nds32.c:4922
++binutils-2.32/bfd/po/da.po:#: elf32-moxie.c:290 elf32-msp430.c:1325 elf32-mt.c:399 elf32-openrisc.c:412
++binutils-2.32/bfd/po/pt.po:#: elf32-microblaze.c:969 elf32-mips.c:2229 elf32-moxie.c:137
++binutils-2.32/bfd/po/pt.po:#: elf32-moxie.c:288 elf32-mt.c:402 elf32-nds32.c:6189 elf32-or1k.c:1759
++binutils-2.32/bfd/po/pt.po:#: elf32-microblaze.c:1635 elf32-moxie.c:292 elf32-msp430.c:1362
++binutils-2.32/bfd/po/pt.po:#: elf32-moxie.c:300 elf32-msp430.c:1370 elf32-mt.c:410 elf32-nds32.c:6201
++binutils-2.32/bfd/po/pt.po:#: elf32-moxie.c:296 elf32-msp430.c:1366 elf32-mt.c:406 elf32-or1k.c:1767
++binutils-2.32/bfd/po/es.po:#: elf32-microblaze.c:1556 elf32-moxie.c:285 elf32-mt.c:400 elf32-nds32.c:5328
++binutils-2.32/bfd/po/es.po:#: elf32-metag.c:1989 elf32-microblaze.c:1560 elf32-moxie.c:289
++binutils-2.32/bfd/po/es.po:#: elf32-microblaze.c:1568 elf32-moxie.c:297 elf32-msp430.c:1365
++binutils-2.32/bfd/po/es.po:#: elf32-metag.c:1993 elf32-moxie.c:293 elf32-msp430.c:1361 elf32-mt.c:404
++binutils-2.32/bfd/po/es.po:#: elf32-moxie.c:137
++binutils-2.32/bfd/po/ru.po:#: elf32-microblaze.c:969 elf32-mips.c:2229 elf32-moxie.c:137
++binutils-2.32/bfd/po/ru.po:#: elf32-moxie.c:288 elf32-mt.c:402 elf32-nds32.c:6189 elf32-or1k.c:1759
++binutils-2.32/bfd/po/ru.po:#: elf32-microblaze.c:1635 elf32-moxie.c:292 elf32-msp430.c:1362
++binutils-2.32/bfd/po/ru.po:#: elf32-moxie.c:300 elf32-msp430.c:1370 elf32-mt.c:410 elf32-nds32.c:6201
++binutils-2.32/bfd/po/ru.po:#: elf32-moxie.c:296 elf32-msp430.c:1366 elf32-mt.c:406 elf32-or1k.c:1767
++binutils-2.32/bfd/po/sr.po:#: elf32-moxie.c:282 elf32-mt.c:395 elf32-nds32.c:4910 elf32-openrisc.c:404
++binutils-2.32/bfd/po/sr.po:#: elf32-microblaze.c:1564 elf32-moxie.c:286 elf32-msp430.c:1321
++binutils-2.32/bfd/po/sr.po:#: elf32-moxie.c:294 elf32-msp430.c:1329 elf32-mt.c:403 elf32-nds32.c:4922
++binutils-2.32/bfd/po/sr.po:#: elf32-moxie.c:290 elf32-msp430.c:1325 elf32-mt.c:399 elf32-openrisc.c:412
++binutils-2.32/bfd/po/sv.po:#: elf32-moxie.c:282 elf32-mt.c:395 elf32-nds32.c:4910 elf32-openrisc.c:404
++binutils-2.32/bfd/po/sv.po:#: elf32-microblaze.c:1564 elf32-moxie.c:286 elf32-msp430.c:1321
++binutils-2.32/bfd/po/sv.po:#: elf32-moxie.c:294 elf32-msp430.c:1329 elf32-mt.c:403 elf32-nds32.c:4922
++binutils-2.32/bfd/po/sv.po:#: elf32-moxie.c:290 elf32-msp430.c:1325 elf32-mt.c:399 elf32-openrisc.c:412
++binutils-2.32/bfd/elf32-adelie.c:   Copied from elf32-moxie.c which is..
++binutils-2.32/bfd/elf32-adelie.c:struct moxie_reloc_map
++binutils-2.32/bfd/elf32-adelie.c:  unsigned int moxie_reloc_val;
++binutils-2.32/bfd/elf32-adelie.c:static const struct moxie_reloc_map moxie_reloc_map [] =
++binutils-2.32/bfd/elf32-adelie.c:moxie_reloc_type_lookup (bfd *abfd ATTRIBUTE_UNUSED,
++binutils-2.32/bfd/elf32-adelie.c:  for (i = sizeof (moxie_reloc_map) / sizeof (moxie_reloc_map[0]);
++binutils-2.32/bfd/elf32-adelie.c:    if (moxie_reloc_map [i].bfd_reloc_val == code)
++binutils-2.32/bfd/elf32-adelie.c:      return & moxie_elf_howto_table [moxie_reloc_map[i].moxie_reloc_val];
++binutils-2.32/bfd/elf32-adelie.c:moxie_reloc_name_lookup (bfd *abfd ATTRIBUTE_UNUSED, const char *r_name)
++binutils-2.32/bfd/elf32-adelie.c:       i < sizeof (moxie_elf_howto_table) / sizeof (moxie_elf_howto_table[0]);
++binutils-2.32/bfd/elf32-adelie.c:    if (moxie_elf_howto_table[i].name != NULL
++binutils-2.32/bfd/elf32-adelie.c:	&& strcasecmp (moxie_elf_howto_table[i].name, r_name) == 0)
++binutils-2.32/bfd/elf32-adelie.c:      return &moxie_elf_howto_table[i];
++binutils-2.32/bfd/elf32-adelie.c:moxie_info_to_howto_rela (bfd *abfd,
++binutils-2.32/bfd/elf32-adelie.c:  cache_ptr->howto = & moxie_elf_howto_table [r_type];
++binutils-2.32/bfd/elf32-adelie.c:moxie_final_link_relocate (reloc_howto_type *howto,
++binutils-2.32/bfd/elf32-adelie.c:moxie_elf_relocate_section (bfd *output_bfd,
++binutils-2.32/bfd/elf32-adelie.c:      howto  = moxie_elf_howto_table + r_type;
++binutils-2.32/bfd/elf32-adelie.c:      r = moxie_final_link_relocate (howto, input_bfd, input_section,
++binutils-2.32/bfd/elf32-adelie.c:moxie_elf_gc_mark_hook (asection *sec,
++binutils-2.32/bfd/elf32-adelie.c:moxie_elf_check_relocs (bfd *abfd,
++binutils-2.32/bfd/elf32-adelie.c:#define ELF_ARCH		bfd_arch_moxie
++binutils-2.32/bfd/elf32-adelie.c:#define TARGET_BIG_SYM		moxie_elf32_be_vec
++binutils-2.32/bfd/elf32-adelie.c:#define TARGET_BIG_NAME		"elf32-bigmoxie"
++binutils-2.32/bfd/elf32-adelie.c:#define TARGET_LITTLE_SYM	moxie_elf32_le_vec
++binutils-2.32/bfd/elf32-adelie.c:#define TARGET_LITTLE_NAME	"elf32-littlemoxie"
++binutils-2.32/bfd/elf32-adelie.c:#define elf_info_to_howto			moxie_info_to_howto_rela
++binutils-2.32/bfd/elf32-adelie.c:#define elf_backend_relocate_section		moxie_elf_relocate_section
++binutils-2.32/bfd/elf32-adelie.c:#define elf_backend_gc_mark_hook		moxie_elf_gc_mark_hook
++binutils-2.32/bfd/elf32-adelie.c:#define elf_backend_check_relocs		moxie_elf_check_relocs
++binutils-2.32/bfd/elf32-adelie.c:#define bfd_elf32_bfd_reloc_type_lookup		moxie_reloc_type_lookup
++binutils-2.32/bfd/elf32-adelie.c:#define bfd_elf32_bfd_reloc_name_lookup		moxie_reloc_name_lookup
++binutils-2.32/bfd/ChangeLog-2018:	* elf32-moxie.c (moxie_info_to_howto_rela): Likewise.
++binutils-2.32/bfd/ChangeLog-2018:	* elf32-microblaze.c, * elf32-mips.c, * elf32-moxie.c,
++binutils-2.32/bfd/ChangeLog-2018:	* elf32-moxie.c: Likewise.
++binutils-2.32/bfd/targets.c:extern const bfd_target moxie_elf32_be_vec;
++binutils-2.32/bfd/targets.c:extern const bfd_target moxie_elf32_le_vec;
++binutils-2.32/bfd/targets.c:	&moxie_elf32_be_vec,
++binutils-2.32/bfd/targets.c:	&moxie_elf32_le_vec,
++binutils-2.32/bfd/elf32-moxie.c:/* moxie-specific support for 32-bit ELF.
++binutils-2.32/bfd/elf32-moxie.c:#include "elf/moxie.h"
++binutils-2.32/bfd/elf32-moxie.c:static reloc_howto_type moxie_elf_howto_table [] =
++binutils-2.32/bfd/elf32-moxie.c:struct moxie_reloc_map
++binutils-2.32/bfd/elf32-moxie.c:  unsigned int moxie_reloc_val;
++binutils-2.32/bfd/elf32-moxie.c:static const struct moxie_reloc_map moxie_reloc_map [] =
++binutils-2.32/bfd/elf32-moxie.c:moxie_reloc_type_lookup (bfd *abfd ATTRIBUTE_UNUSED,
++binutils-2.32/bfd/elf32-moxie.c:  for (i = sizeof (moxie_reloc_map) / sizeof (moxie_reloc_map[0]);
++binutils-2.32/bfd/elf32-moxie.c:    if (moxie_reloc_map [i].bfd_reloc_val == code)
++binutils-2.32/bfd/elf32-moxie.c:      return & moxie_elf_howto_table [moxie_reloc_map[i].moxie_reloc_val];
++binutils-2.32/bfd/elf32-moxie.c:moxie_reloc_name_lookup (bfd *abfd ATTRIBUTE_UNUSED, const char *r_name)
++binutils-2.32/bfd/elf32-moxie.c:       i < sizeof (moxie_elf_howto_table) / sizeof (moxie_elf_howto_table[0]);
++binutils-2.32/bfd/elf32-moxie.c:    if (moxie_elf_howto_table[i].name != NULL
++binutils-2.32/bfd/elf32-moxie.c:	&& strcasecmp (moxie_elf_howto_table[i].name, r_name) == 0)
++binutils-2.32/bfd/elf32-moxie.c:      return &moxie_elf_howto_table[i];
++binutils-2.32/bfd/elf32-moxie.c:moxie_info_to_howto_rela (bfd *abfd,
++binutils-2.32/bfd/elf32-moxie.c:  cache_ptr->howto = & moxie_elf_howto_table [r_type];
++binutils-2.32/bfd/elf32-moxie.c:moxie_final_link_relocate (reloc_howto_type *howto,
++binutils-2.32/bfd/elf32-moxie.c:moxie_elf_relocate_section (bfd *output_bfd,
++binutils-2.32/bfd/elf32-moxie.c:      howto  = moxie_elf_howto_table + r_type;
++binutils-2.32/bfd/elf32-moxie.c:      r = moxie_final_link_relocate (howto, input_bfd, input_section,
++binutils-2.32/bfd/elf32-moxie.c:moxie_elf_gc_mark_hook (asection *sec,
++binutils-2.32/bfd/elf32-moxie.c:moxie_elf_check_relocs (bfd *abfd,
++binutils-2.32/bfd/elf32-moxie.c:#define ELF_ARCH		bfd_arch_moxie
++binutils-2.32/bfd/elf32-moxie.c:#define TARGET_BIG_SYM		moxie_elf32_be_vec
++binutils-2.32/bfd/elf32-moxie.c:#define TARGET_BIG_NAME		"elf32-bigmoxie"
++binutils-2.32/bfd/elf32-moxie.c:#define TARGET_LITTLE_SYM	moxie_elf32_le_vec
++binutils-2.32/bfd/elf32-moxie.c:#define TARGET_LITTLE_NAME	"elf32-littlemoxie"
++binutils-2.32/bfd/elf32-moxie.c:#define elf_info_to_howto			moxie_info_to_howto_rela
++binutils-2.32/bfd/elf32-moxie.c:#define elf_backend_relocate_section		moxie_elf_relocate_section
++binutils-2.32/bfd/elf32-moxie.c:#define elf_backend_gc_mark_hook		moxie_elf_gc_mark_hook
++binutils-2.32/bfd/elf32-moxie.c:#define elf_backend_check_relocs		moxie_elf_check_relocs
++binutils-2.32/bfd/elf32-moxie.c:#define bfd_elf32_bfd_reloc_type_lookup		moxie_reloc_type_lookup
++binutils-2.32/bfd/elf32-moxie.c:#define bfd_elf32_bfd_reloc_name_lookup		moxie_reloc_name_lookup
++binutils-2.32/bfd/ChangeLog-2014:	* elf32-moxie.c (moxie_info_to_howto_rela): Likewise.
++binutils-2.32/bfd/ChangeLog-2014:2014-07-27  Anthony Green  <green@moxielogic.org>
++binutils-2.32/bfd/ChangeLog-2014:	* config.bfd: Add moxie-*-moxiebox*.
++binutils-2.32/bfd/ChangeLog-2014:	* elf32-metag.c, * elf32-microblaze.c, * elf32-mips.c, * elf32-moxie.c,
++binutils-2.32/bfd/cpu-moxie.c:/* BFD support for the moxie processor.
++binutils-2.32/bfd/cpu-moxie.c:const bfd_arch_info_type bfd_moxie_arch =
++binutils-2.32/bfd/cpu-moxie.c:    bfd_arch_moxie,   /* enum bfd_architecture arch.  */
++binutils-2.32/bfd/cpu-moxie.c:    bfd_mach_moxie,
++binutils-2.32/bfd/cpu-moxie.c:    "moxie",	      /* Arch name.  */
++binutils-2.32/bfd/cpu-moxie.c:    "moxie",	      /* Printable name.  */
++binutils-2.32/bfd/configure.ac:    moxie_elf32_be_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
++binutils-2.32/bfd/configure.ac:    moxie_elf32_le_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
++binutils-2.32/bfd/ChangeLog-2010:	* elf32-moxie.c (moxie_elf_relocate_section): Likewise.
++binutils-2.32/bfd/ChangeLog-2010:2010-07-30  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/ChangeLog-2010:	* config.bfd (targ_cpu): Add moxie-*-rtems support.
++binutils-2.32/bfd/ChangeLog-2010:	* elf32-moxie.c (moxie_elf_relocate_section): Likewise.
++binutils-2.32/bfd/configure:    moxie_elf32_be_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
++binutils-2.32/bfd/configure:    moxie_elf32_le_vec)		 tb="$tb elf32-moxie.lo elf32.lo $elf" ;;
++binutils-2.32/bfd/cpu-adelie.c:   Copied from cpu-moxie.c which is..
++binutils-2.32/bfd/ChangeLog-2009:2009-07-31  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/ChangeLog-2009:	* config.bfd (targ_cpu): Add moxie-uclinux support.
++binutils-2.32/bfd/ChangeLog-2009:2009-06-11  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/ChangeLog-2009:	* elf32-moxie.c (moxie_elf_howto_table): Add R_MOXIE_PCREL10
++binutils-2.32/bfd/ChangeLog-2009:	(moxie_reloc_map): Ditto.
++binutils-2.32/bfd/ChangeLog-2009:2009-04-27  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/ChangeLog-2009:2009-04-15  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/ChangeLog-2009:	* targets.c: Add moxie support.
++binutils-2.32/bfd/ChangeLog-2009:	* cpu-moxie.c, elf32-moxie.c: New files.
++binutils-2.32/bfd/ChangeLog-2009:	* archures.c: Add moxie support.
++binutils-2.32/bfd/ChangeLog-2009:	* configure.in: Add moxie support.
++binutils-2.32/bfd/ChangeLog-2009:	* config.bfd, archures.c: Add moxie support.
++binutils-2.32/bfd/ChangeLog-2016:	* elf32-moxie.c: Likewise.
++binutils-2.32/bfd/ChangeLog-2016:	* elf32-moxie.c: Likewise.
++binutils-2.32/bfd/archures.c:.  bfd_arch_moxie,     {* The moxie processor.  *}
++binutils-2.32/bfd/archures.c:.#define bfd_mach_moxie		1
++binutils-2.32/bfd/archures.c:extern const bfd_arch_info_type bfd_moxie_arch;
++binutils-2.32/bfd/archures.c:    &bfd_moxie_arch,
++binutils-2.32/bfd/ChangeLog-2012:2012-09-13  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/ChangeLog-2012:	* targets.c (bfd_elf32_bigmoxie_vec, bfd_elf32_littlemoxie_vec):
++binutils-2.32/bfd/ChangeLog-2012:	(bfd_elf32_moxie_vec): Remove.
++binutils-2.32/bfd/ChangeLog-2012:	* config.bfd, configure.in: Add bi-endian support for moxie.
++binutils-2.32/bfd/ChangeLog-2012:	* elf32-moxie.c (TARGET_LITTLE_NAME, TARGET_LITTLE_SYM): Define.
++binutils-2.32/bfd/ChangeLog-2012:	* elf32-moxie.c (moxie_elf_relocate_section): Likewise.
++binutils-2.32/bfd/ChangeLog-2012:	* elf32-mep.c, * elf32-moxie.c, * elf32-msp430.c,
++binutils-2.32/bfd/ChangeLog-2012:	* cpu-moxie.c: Likewise.
++binutils-2.32/bfd/doc/archures.texi:  bfd_arch_moxie,     /* The moxie processor.  */
++binutils-2.32/bfd/doc/archures.texi:#define bfd_mach_moxie         1
++binutils-2.32/bfd/doc/ChangeLog-0415:2009-04-22  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/doc/bfd.info:       bfd_arch_moxie,     /* The moxie processor.  */
++binutils-2.32/bfd/doc/bfd.info:     #define bfd_mach_moxie         1
++binutils-2.32/bfd/ChangeLog-2013:	* elf32-moxie.c (moxie_elf_relocate_section): Likewise.
++binutils-2.32/bfd/ChangeLog-2013:	* elf32-moxie.c (moxie_elf_check_relocs): Likewise.
++binutils-2.32/bfd/ChangeLog-2013:2013-02-26  Anthony Green  <green@moxielogic.com>
++binutils-2.32/bfd/ChangeLog-2013:	* config.bfd: Extend moxie-rtems target triplet name support.
++binutils-2.32/bfd/ChangeLog-2013:	* cpu-moxie.c: Likewise.
++binutils-2.32/bfd/ChangeLog-2017:	* cpu-mcore.c, * cpu-microblaze.c, * cpu-mips.c, * cpu-moxie.c,
++binutils-2.32/bfd/ChangeLog-2017:	* elf32-moxie.c, * elf32-msp430.c, * elf32-mt.c, * elf32-nds32.c,
++binutils-2.32/bfd/ChangeLog-2017:	* elf32-moxie.c (moxie_elf_check_relocs): Likewise.
++binutils-2.32/bfd/ChangeLog-2017:	* elf32-moxie.c: Likewise.
++binutils-2.32/bfd/Makefile.am:	cpu-moxie.lo \
++binutils-2.32/bfd/Makefile.am:	cpu-moxie.c \
++binutils-2.32/bfd/Makefile.am:	elf32-moxie.lo \
++binutils-2.32/bfd/Makefile.am:	elf32-moxie.c \
++binutils-2.32/bfd/verilog.c:   Written by Anthony Green <green@moxielogic.com>
++binutils-2.32/bfd/elf32-ft32.c:   Copied from elf32-moxie.c which is..
++binutils-2.32/bfd/bfd-in2.h:  BFD_RELOC_MOXIE_10_PCREL,
++binutils-2.32/bfd/elf32-adelie.c:  HOWTO (R_MOXIE_PCREL10,	/* type.  */
++binutils-2.32/bfd/elf32-adelie.c:	 "R_MOXIE_PCREL10",		/* name.  */
++binutils-2.32/bfd/elf32-adelie.c:/* Map BFD reloc types to MOXIE ELF reloc types.  */
++binutils-2.32/bfd/elf32-adelie.c:  { BFD_RELOC_NONE,	       R_MOXIE_NONE },
++binutils-2.32/bfd/elf32-adelie.c:  { BFD_RELOC_32,	       R_MOXIE_32 },
++binutils-2.32/bfd/elf32-adelie.c:  { BFD_RELOC_MOXIE_10_PCREL,  R_MOXIE_PCREL10 },
++binutils-2.32/bfd/elf32-adelie.c:/* Set the howto pointer for an MOXIE ELF reloc.  */
++binutils-2.32/bfd/elf32-adelie.c:  if (r_type >= (unsigned int) R_MOXIE_max)
++binutils-2.32/bfd/elf32-adelie.c:/* Relocate an MOXIE ELF section.
++binutils-2.32/bfd/elf32-adelie.c:#define ELF_MACHINE_CODE	EM_MOXIE
++binutils-2.32/bfd/elf32-adelie.c:#define ELF_MACHINE_ALT1	EM_MOXIE_OLD
++binutils-2.32/bfd/elf32-moxie.c:  HOWTO (R_MOXIE_NONE,		/* type */
++binutils-2.32/bfd/elf32-moxie.c:	 "R_MOXIE_NONE",		/* name */
++binutils-2.32/bfd/elf32-moxie.c:  HOWTO (R_MOXIE_32,		/* type */
++binutils-2.32/bfd/elf32-moxie.c:	 "R_MOXIE_32",		/* name */
++binutils-2.32/bfd/elf32-moxie.c:  HOWTO (R_MOXIE_PCREL10,	/* type.  */
++binutils-2.32/bfd/elf32-moxie.c:	 "R_MOXIE_PCREL10",		/* name.  */
++binutils-2.32/bfd/elf32-moxie.c:/* Map BFD reloc types to MOXIE ELF reloc types.  */
++binutils-2.32/bfd/elf32-moxie.c:  { BFD_RELOC_NONE,	       R_MOXIE_NONE },
++binutils-2.32/bfd/elf32-moxie.c:  { BFD_RELOC_32,	       R_MOXIE_32 },
++binutils-2.32/bfd/elf32-moxie.c:  { BFD_RELOC_MOXIE_10_PCREL,  R_MOXIE_PCREL10 },
++binutils-2.32/bfd/elf32-moxie.c:/* Set the howto pointer for an MOXIE ELF reloc.  */
++binutils-2.32/bfd/elf32-moxie.c:  if (r_type >= (unsigned int) R_MOXIE_max)
++binutils-2.32/bfd/elf32-moxie.c:/* Relocate an MOXIE ELF section.
++binutils-2.32/bfd/elf32-moxie.c:#define ELF_MACHINE_CODE	EM_MOXIE
++binutils-2.32/bfd/elf32-moxie.c:#define ELF_MACHINE_ALT1	EM_MOXIE_OLD
++binutils-2.32/bfd/libbfd.h:  "BFD_RELOC_MOXIE_10_PCREL",
++binutils-2.32/bfd/ChangeLog-2009:	* reloc.c: Add BFD_RELOC_MOXIE_10_PCREL.
++binutils-2.32/bfd/ChangeLog-2009:	* elf32-moxie.c (moxie_elf_howto_table): Add R_MOXIE_PCREL10
++binutils-2.32/bfd/doc/reloc.texi:@deffn {} BFD_RELOC_MOXIE_10_PCREL
++binutils-2.32/bfd/doc/bfd.info: -- : BFD_RELOC_MOXIE_10_PCREL
++Binary file binutils-2.32/bfd/doc/bfd.info matches
++binutils-2.32/bfd/reloc.c:  BFD_RELOC_MOXIE_10_PCREL

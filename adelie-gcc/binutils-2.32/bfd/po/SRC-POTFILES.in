@@ -82,7 +82,6 @@ cpu-metag.c
 cpu-microblaze.c
 cpu-mips.c
 cpu-mmix.c
-cpu-adelie.c
 cpu-moxie.c
 cpu-msp430.c
 cpu-mt.c

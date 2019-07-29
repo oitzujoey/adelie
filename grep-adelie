@@ -1,0 +1,46 @@
+adelie-gcc/binutils-2.32/bfd/bfd-in2.h:  bfd_arch_adelie,    /* The Adelie processor. */
+adelie-gcc/binutils-2.32/bfd/bfd-in2.h:#define bfd_mach_adelie
+adelie-gcc/binutils-2.32/bfd/bfd-in2.h:/* Adelie ELF relocations. */
+adelie-gcc/binutils-2.32/bfd/bfd-in2.h:// ADELIE_TODO I have no idea what this does
+adelie-gcc/binutils-2.32/bfd/bfd-in2.h:// BFD_RELOC_ADELIE_10_PCREL,
+adelie-gcc/binutils-2.32/bfd/Makefile.in:	cpu-adelie.lo \
+adelie-gcc/binutils-2.32/bfd/Makefile.in:	cpu-adelie.c \
+adelie-gcc/binutils-2.32/bfd/Makefile.in:	elf32-adelie.lo \
+adelie-gcc/binutils-2.32/bfd/Makefile.in:	elf32-adelie.c \
+adelie-gcc/binutils-2.32/bfd/Makefile.in:@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cpu-adelie.Plo@am__quote@
+adelie-gcc/binutils-2.32/bfd/Makefile.in:@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf32-adelie.Plo@am__quote@
+adelie-gcc/binutils-2.32/bfd/config.bfd:  adelie-*-elf)
+adelie-gcc/binutils-2.32/bfd/config.bfd:    targ_defvec=bfd_elf32_adelie_vec
+adelie-gcc/binutils-2.32/bfd/po/SRC-POTFILES.in:cpu-adelie.c
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:/* Adelie-specific support for 32-bit ELF.
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:// ADELIE_TODO
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:// #include "elf/adelie.h"
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:#define ELF_ARCH		bfd_arch_adelie
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:#define ELF_MACHINE_CODE	EM_ADELIE
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:// #define TARGET_BIG_SYM		adelie_elf32_be_vec
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:#define TARGET_BIG_SYM		bfd_elf32_adelie_vec
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:#define TARGET_BIG_NAME		"elf32-adelie"
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:// #define TARGET_LITTLE_SYM	adelie_elf32_le_vec
+adelie-gcc/binutils-2.32/bfd/elf32-adelie.c:// #define TARGET_LITTLE_NAME	"elf32-littleadelie"
+adelie-gcc/binutils-2.32/bfd/targets.c:extern const bfd_target bfd_elf32_adelie_vec;
+adelie-gcc/binutils-2.32/bfd/targets.c:	&bfd_elf32_adelie_vec,
+adelie-gcc/binutils-2.32/bfd/libbfd.h:  // ADELIE_TODO
+adelie-gcc/binutils-2.32/bfd/libbfd.h:  // "BFD_RELOC_ADELIE_10_PCREL"
+adelie-gcc/binutils-2.32/bfd/configure.ac:    bfd_elf32_adelie_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
+adelie-gcc/binutils-2.32/bfd/configure:    bfd_elf32_adelie_vec)		 tb="$tb elf32-adelie.lo elf32.lo $elf" ;;
+adelie-gcc/binutils-2.32/bfd/cpu-adelie.c:/* BFD support for the Adelie processor.
+adelie-gcc/binutils-2.32/bfd/cpu-adelie.c:const bfd_arch_info_type bfd_adelie_arch =
+adelie-gcc/binutils-2.32/bfd/cpu-adelie.c:    bfd_arch_adelie,   /* enum bfd_architecture arch.  */
+adelie-gcc/binutils-2.32/bfd/cpu-adelie.c:    bfd_mach_adelie,
+adelie-gcc/binutils-2.32/bfd/cpu-adelie.c:    "adelie",	      /* Arch name.  */
+adelie-gcc/binutils-2.32/bfd/cpu-adelie.c:    "adelie",	      /* Printable name.  */
+adelie-gcc/binutils-2.32/bfd/archures.c:.  bfd_arch_adelie,    {* The Adelie processor *}
+adelie-gcc/binutils-2.32/bfd/archures.c:.#define bfd_mach_adelie  1
+adelie-gcc/binutils-2.32/bfd/archures.c:extern const bfd_arch_info_type bfd_adelie_arch;
+adelie-gcc/binutils-2.32/bfd/archures.c:    &bfd_adelie_arch,
+adelie-gcc/binutils-2.32/bfd/doc/bfd.info:ADELIE_TODO
+adelie-gcc/binutils-2.32/bfd/Makefile.am:	cpu-adelie.lo \
+adelie-gcc/binutils-2.32/bfd/Makefile.am:	cpu-adelie.c \
+adelie-gcc/binutils-2.32/bfd/Makefile.am:	elf32-adelie.lo \
+adelie-gcc/binutils-2.32/bfd/Makefile.am:	elf32-adelie.c \
+adelie-gcc/binutils-2.32/bfd/reloc.c:  ADELIE_TODO Adelie ELF relocations.

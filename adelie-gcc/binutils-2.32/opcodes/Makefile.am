@@ -191,6 +191,8 @@ TARGET_LIBOPCODES_CFILES = \
 	mips16-opc.c \
 	mmix-dis.c \
 	mmix-opc.c \
+	adelie-dis.c \
+	adelie-opc.c \
 	moxie-dis.c \
 	moxie-opc.c \
 	msp430-decode.c \

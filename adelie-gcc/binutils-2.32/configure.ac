@@ -1008,7 +1008,7 @@ case "${target}" in
     ;;
   adelie-*-*)
     noconfigdirs="$noconfigdirs gdb sim"
-    noconfigdirs="$noconfigdirs bfd binutils ld gprof"
+    noconfigdirs="$noconfigdirs binutils ld gprof"
     ;;
   moxie-*-*)
     noconfigdirs="$noconfigdirs"

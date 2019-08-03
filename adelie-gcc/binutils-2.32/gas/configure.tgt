@@ -324,6 +324,8 @@ case ${generic_target} in
   mn10300-*-linux*)			fmt=elf em=linux ;;
   mn10300-*-*)				fmt=elf ;;
 
+  adelie-*-*)				fmt=elf ;;
+
   moxie-*-uclinux)			fmt=elf em=linux ;;
   moxie-*-moxiebox*)                    fmt=elf endian=little ;;
   moxie-*-*)				fmt=elf ;;

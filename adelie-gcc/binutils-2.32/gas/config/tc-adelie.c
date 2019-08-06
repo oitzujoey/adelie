@@ -484,17 +484,18 @@ tc_gen_reloc (asection *section ATTRIBUTE_UNUSED, fixS *fixP)
 long
 md_pcrel_from (fixS *fixP)
 {
-  valueT addr = fixP->fx_where + fixP->fx_frag->fr_address;
+    valueT addr = fixP->fx_where + fixP->fx_frag->fr_address;
+    return addr - 1;
 
-  switch (fixP->fx_r_type)
-    {
-    case BFD_RELOC_32:
-      return addr + 4;
-    case BFD_RELOC_MOXIE_10_PCREL:
-      /* Offset is from the end of the instruction.  */
-      return addr + 2;
-    default:
-      abort ();
-      return addr;
-    }
+//   switch (fixP->fx_r_type)
+//     {
+//     case BFD_RELOC_32:
+//       return addr + 4;
+//     case BFD_RELOC_MOXIE_10_PCREL:
+//       /* Offset is from the end of the instruction.  */
+//       return addr + 2;
+//     default:
+//       abort ();
+//       return addr;
+//     }
 }

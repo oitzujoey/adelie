@@ -941,7 +941,6 @@ MIPS ELF relocations.
 @deffnx {} BFD_RELOC_MIPS_JUMP_SLOT
 MIPS ELF relocations (VxWorks and PLT extensions).
 @end deffn
-@deffn {} ENUMDOC
 @deffn {} BFD_RELOC_MOXIE_10_PCREL
 Moxie ELF relocations.
 @end deffn

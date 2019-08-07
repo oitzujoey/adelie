@@ -1,0 +1,8 @@
+#!/bin/bash
+
+make distclean
+
+if [ "$1" != "clean" ]
+then
+	../configure --target=$1 && printf "\nStarting build with target=$1\n" && make -j 10 &> log
+fi

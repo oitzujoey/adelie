@@ -23,7 +23,7 @@
 #include "sysdep.h"
 #include "opcode/adelie.h"
 
-const adelie_opc_info_t adelie_opc_info[128] =
+const adelie_opc_info_t adelie_opc_info[256] =
   {
     { 0x00, "bad" }  // Reserved as bad.
   };

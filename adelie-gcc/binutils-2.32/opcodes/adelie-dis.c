@@ -46,7 +46,7 @@ static void *stream;
 int
 print_insn_adelie (bfd_vma addr, struct disassemble_info * info)
 {
-  int length = 2;
+  int length = 1;
   int status;
   stream = info->stream;
   const adelie_opc_info_t * opcode;
@@ -54,16 +54,16 @@ print_insn_adelie (bfd_vma addr, struct disassemble_info * info)
   unsigned short iword;
   fpr = info->fprintf_func;
 
-  if ((status = info->read_memory_func (addr, buffer, 2, info)))
+  if ((status = info->read_memory_func (addr, buffer, 1, info)))
     goto fail;
   
   iword = bfd_getb16(buffer);
 
-  opcode = &adelie_opc_info[iword>>8];
+  opcode = &adelie_opc_info[iword && 0xFF];
 
   fpr(stream, "%s", opcode->name);
 
-  length = 2;
+  length = 1;
 
   return length;
 

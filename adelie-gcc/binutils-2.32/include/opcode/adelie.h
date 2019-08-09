@@ -70,6 +70,6 @@ typedef struct adelie_opc_info_t
   const char *  name;
 } adelie_opc_info_t;
 
-extern const adelie_opc_info_t adelie_opc_info[128];
+extern const adelie_opc_info_t adelie_opc_info[256];
 // extern const adelie_opc_info_t moxie_form2_opc_info[4];
 // extern const adelie_opc_info_t moxie_form3_opc_info[16];

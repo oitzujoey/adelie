@@ -27,7 +27,7 @@
 #include "opcode/adelie.h"
 // #include "elf/adelie.h"
 
-extern const adelie_opc_info_t adelie_opc_info[128];
+extern const adelie_opc_info_t adelie_opc_info[256];
 
 const char comment_chars[]        = "#";
 const char line_separator_chars[] = ";";
@@ -62,12 +62,13 @@ md_operand (expressionS *op __attribute__((unused)))
 void
 md_begin (void)
 {
-  int count;
+  // int count;
   const adelie_opc_info_t *opcode;
   opcode_hash_control = hash_new ();
 
   /* Insert names into hash table.  */
-  for (count = 0, opcode = adelie_opc_info; count++ < 64; opcode++)
+  for (opcode = adelie_opc_info; opcode->name; opcode++)
+  // for (count = 0, opcode = adelie_opc_info; count++ < 256; opcode++)
     hash_insert (opcode_hash_control, opcode->name, (char *) opcode);
 
 //   for (count = 0, opcode = moxie_form2_opc_info; count++ < 4; opcode++)
@@ -172,9 +173,7 @@ md_assemble (char *str)
 
   /* Find the op code end.  */
   op_start = str;
-  for (op_end = str;
-       *op_end && !is_end_of_line[*op_end & 0xff] && *op_end != ' ';
-       op_end++)
+  for (op_end = str; *op_end && !is_end_of_line[*op_end & 0xff] && *op_end != ' '; op_end++)
     nlen++;
 
   pend = *op_end;

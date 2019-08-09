@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "disassemble.h": "c",
+        "adelie.h": "c"
+    }
+}

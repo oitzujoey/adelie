@@ -59,7 +59,7 @@ print_insn_adelie (bfd_vma addr, struct disassemble_info * info)
   
   iword = bfd_getb16(buffer);
 
-  opcode = &adelie_opc_info[iword && 0xFF];
+  opcode = &adelie_opc_info[iword & 0xFF];
 
   fpr(stream, "%s", opcode->name);
 

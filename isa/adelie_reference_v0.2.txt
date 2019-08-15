@@ -1,0 +1,106 @@
+////////////////////////////////////////////////////////////////////////////////
+//Adelie Reference v0.2
+//
+//Created 6/6/2019
+//by Joey Herguth
+//
+//32 bit data and address
+//Uses two's compliment
+//Registers may be reduced as necessary.
+//In jump/branch and link instructions, the pc is saved into lr
+//Bit 30 controls alu vs. branch type
+//Bit 31 controls register vs. immediate type
+//Addressing is by half-word
+//
+//Looks good so far!
+//
+//Yikes! This looks a lot like MIPS. That may not be a coincidence.
+//
+
+
+/*Assembly */   /*Description*/         /*Instruction*/
+
+jmp rs          goto rs                 {1'0,1'0,4'h0,5'x,5'rs}
+ br rd rs        goto rd ? rs : pc       {1'0,1'0,4'h1,5'rd,5'rs}
+ jal rs          goto rs                 {1'0,1'0,4'h2,5'x,5'rs}
+ bal rd rs       goto rd ? rs : pc       {1'0,1'0,4'h3,5'rd,5'rs}
+
+ shr rd rs       rd = rs >> 1            {1'0,1'1,4'h0,5'rd,5'rs}
+mov rd rs       rd = rs                 {1'0,1'1,4'h1,5'rd,5'rs}
+ ld rd [rs]      rd = *rs                {1'0,1'1,4'h2,5'rd,5'rs}
+ st [rd] rs      *rd = rs                {1'0,1'1,4'h3,5'rd,5'rs}
+ add rd rs r2    rd += rs                {1'0,1'1,4'h4,5'rd,5'rs}
+ sub rd rs r2    rd -= rs                {1'0,1'1,4'h5,5'rd,5'rs}
+ xor rd rs r2    rd ^= rs                {1'0,1'1,4'h6,5'rd,5'rs}
+ and rd rs r2    rd &= rs                {1'0,1'1,4'h7,5'rd,5'rs}
+ or rd rs r2     rd |= rs                {1'0,1'1,4'h8,5'rd,5'rs}
+ eq rd rs r2     rd = rd == rs           {1'0,1'1,4'h9,5'rd,5'rs}
+ neq rd rs r2    rd = rd != rs           {1'0,1'1,4'ha,5'rd,5'rs}
+ gtr rd rs r2    rd = rd > rs            {1'0,1'1,4'hb,5'rd,5'rs}
+ les rd rs r2    rd = rd < rs            {1'0,1'1,4'hc,5'rd,5'rs}
+ gte rd rs r2    rd = rd >= rs           {1'0,1'1,4'hd,5'rd,5'rs}
+ lse rd rs r2    rd = rd <= rs           {1'0,1'1,4'he,5'rd,5'rs}
+
+ jmp #           goto pc + #             {1'1,1'0,4'h0,5'x,21'#}
+ br rd #         goto pc + rd ? # : 0    {1'1,1'0,4'h1,5'rd,21'#}
+ jal #           goto pc + #             {1'1,1'0,4'h2,5'x,21'#}
+ bal rd #        goto pc + rd ? # : 0    {1'1,1'0,4'h3,5'rd,21'#}
+
+ shr rd #        rd = # >> 1             {1'1,1'1,4'h0,5'rd,21'#}
+ldi rd #        rd = #                  {1'1,1'1,4'h1,5'rd,21'#}
+ ld rd [#]       rd = *#                 {1'1,1'1,4'h2,5'rd,21'#}
+ st [#] rs       *# = rs                 {1'1,1'1,4'h3,5'rs,21'#}
+add rd #     rd += #                    {1'1,1'1,4'h4,5'rd,21'#}
+ sub rd #     rd -= #                    {1'1,1'1,4'h5,5'rd,21'#}
+ xor rd #     rd ^= #                    {1'1,1'1,4'h6,5'rd,21'#}
+ and rd #     rd &= #                    {1'1,1'1,4'h7,5'rd,21'#}
+ or rd #      rd |= #                    {1'1,1'1,4'h8,5'rd,21'#}
+ eq rd #      rd = rd == #               {1'1,1'1,4'h9,5'rd,21'#}
+ neq rd #     rd = rd != #               {1'1,1'1,4'ha,5'rd,21'#}
+ gtr rd #     rd = rd > #                {1'1,1'1,4'hb,5'rd,21'#}
+ les rd #     rd = rd < #                {1'1,1'1,4'hc,5'rd,21'#}
+ gte rd #     rd = rd >= #               {1'1,1'1,4'hd,5'rd,21'#}
+ lse rd #     rd = rd <= #               {1'1,1'1,4'he,5'rd,21'#}
+
+
+                    31  30  29  28  27  26  25  24  23  22  21  20  19  18  17  16  15  14  13  12  11  10  9   8   7   6   5   4   3   2   1   0
+register branch     0   0   {-- opcode -}   {------ rd -----}   {------ rs -----}
+register alu        0   1   {-- opcode -}   {------ rd -----}   {------ rs -----}
+immediate branch    1   0   {-- opcode -}   {------ rd -----}   {---------------------------------- immediate ----------------------------------}
+immediate alu       1   1   {-- opcode -}   {------ rd -----}   {---------------------------------- immediate ----------------------------------}
+
+
+/*Register*/    /*Function*/
+
+00  0           Zero
+01  1           Program counter
+02  2           Link register       
+03  3       
+04  4       
+05  5       
+06  6       
+07  7       
+08  8       
+09  9       
+0a  10      
+0b  11      
+0c  12      
+0d  13      
+0e  14      
+0f  15      
+10  16      
+11  17      
+12  18      
+13  19      
+14  20      
+15  21      
+16  22      
+17  23      
+18  24      
+19  25      
+1a  26      
+1b  27      
+1c  28      
+1d  29      
+1e  30      
+1f  31      

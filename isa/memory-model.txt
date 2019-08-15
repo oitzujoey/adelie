@@ -1,0 +1,19 @@
+Adelie memory model
+
+I love harvard architecture, but I also love Von-Neumann, so Adelie will be Von-Neumann, but have a seperate data and instruction cache. This is manageable. Here is the problem: I want to give each program its own 32-bit address space, but I also want to run an operating system such as Unix. I am sure that these two goals are compatible, but I have no idea since I have never ported an OS.
+
+For some reason, Adelie's compatibility with C is a major part of this project, but compatibility with Unix has not been considered. I guess I need to look into how operating systems do memory management.
+
+Assuming the memory model is fully segmented, how can I keep each process completely seperate even though they share the same memory? Ideally, I will be able to have an infinite number of programs running, but for practicality, lets limit it to 2^32. Each program will have a unique number known as the process ID (PID). The process would interact with the OS by performing a function call, but instead of jumping, the process would execute an instruction that would transfer control to the OS.
+
+Maybe I should just make it a flat memory model with read, write, and execute protection. That is probably simplest model.
+
+{1'dirty*, 2'mode, 10'physical_address}
+
+mode:
+00  illegal
+01  read
+10  write
+11  execute
+
+*Only set when mode is write.

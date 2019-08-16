@@ -33,8 +33,9 @@ static fprintf_ftype fpr;
 static void *stream;
 
 /* Macros to extract operands from the instruction word.  */
-// #define OP_A(i) ((i >> 4) & 0xf)
-// #define OP_B(i) (i & 0xf)
+#define OP_R0(i) ((i >> 19) & 0x1F)
+#define OP_R1(i) ((i >> 14) & 0x1F)
+#define OP_R2(i) ((i >> 9) & 0x1F)
 // #define INST2OFFSET(o) ((((signed short)((o & ((1<<10)-1))<<6))>>6)<<1)
 
 // static const char * reg_names[16] =

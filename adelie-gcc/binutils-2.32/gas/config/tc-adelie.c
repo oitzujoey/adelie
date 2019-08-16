@@ -86,17 +86,17 @@ md_begin (void)
 
 /* Parse an expression and then restore the input line pointer.  */
 
-// static char *
-// parse_exp_save_ilp (char *s, expressionS *op)
-// {
-//   char *save = input_line_pointer;
+static char *
+parse_exp_save_ilp (char *s, expressionS *op)
+{
+  char *save = input_line_pointer;
 
-//   input_line_pointer = s;
-//   expression (op);
-//   s = input_line_pointer;
-//   input_line_pointer = save;
-//   return s;
-// }
+  input_line_pointer = s;
+  expression (op);
+  s = input_line_pointer;
+  input_line_pointer = save;
+  return s;
+}
 
 // static int
 // parse_register_operand (char **ptr)
@@ -164,8 +164,8 @@ md_assemble (char *str)
   adelie_opc_info_t *opcode;
   char *p;
   char pend;
-  int idx = 0;
-//   unsigned short iword = 0;
+  int length = 0;
+  unsigned long iword = 0;
 
   int nlen = 0;
 
@@ -188,15 +188,127 @@ md_assemble (char *str)
   *op_end = pend;
 
   if (opcode == NULL)
-    {
-      as_bad (_("unknown opcode %s"), op_start);
+  {
+    as_bad (_("unknown opcode %s"), op_start);
+    return;
+  }
+
+  //  Create the proper number of frags for the length.
+  switch (opcode->itype)
+  {
+  case ADELIE_F0:
+    length = 1;
+    break;
+  
+  case ADELIE_F1:
+    length = 2;
+    break;
+  
+  case ADELIE_F2:
+    length = 3;
+    break;
+  
+  case ADELIE_F3:
+    length = 4;
+    break;
+  
+  default:
+    abort();
+  }
+
+  //  Put opcode into the instruction word.
+  iword = opcode->opcode << (8*(length-1));
+  p = frag_more(1);
+
+  switch (opcode->itype)
+  {
+  case ADELIE_F0:
+    iword = opcode->opcode;
+
+    while (ISSPACE(*op_end)) {
+      op_end++;
+    }
+    if (*op_end != 0) {
+      as_warn("Extra stuff on line ignored.");
+    }
+    break;
+  
+  case ADELIE_F1_1REG:
+    break;
+  
+  case ADELIE_F1_IMM:
+    break;
+  
+  case ADELIE_F2_3REG:
+    break;
+  
+  case ADELIE_F2_2REG_IMM:
+    break;
+  
+  case ADELIE_F2_1REG_IMM:
+    break;
+  
+  case ADELIE_F2_IMM:
+    break;
+  
+  case ADELIE_F3_1REG_IMM:
+    
+    while (ISSPACE(*op_end)) {
+      op_end++;
+    }
+
+    expressionS arg;
+    char *where;
+    int regnum;
+
+    if ((*op_end != '$') || (*(op_end+1) != 'r')) {
+      as_bad("Expecting register.");
+      ignore_rest_of_line();
       return;
     }
 
-  p = frag_more (1);
-  p[idx++] = opcode->opcode;
+    regnum = op_end[2] - '0';
+    if ((regnum < 1) || (regnum > 7)) {
+      as_bad("Illegal register number.");
+      ignore_rest_of_line();
+      return;
+    }
 
-//   number_to_chars_bigendian (p, iword, 2);
+    op_end += 3;
+    while (ISSPACE(*op_end)) {
+      op_end++;
+    }
+
+    iword += (regnum << 19);
+
+    if (*op_end != ',') {
+      as_bad("Expecting comma delimited operands.");
+      ignore_rest_of_line();
+      return;
+    }
+    op_end++;
+
+    op_end = parse_exp_save_ilp(op_end, &arg);
+    where = frag_more(length-1);
+    fix_new_exp(
+      frag_now,
+      (where - frag_now->fr_literal),
+      length-1,
+      &arg,
+      0,
+      BFD_RELOC_32
+    );
+
+    break;
+  
+  case ADELIE_F3_IMM:
+    break;
+  
+  default:
+    abort();
+  }
+
+  number_to_chars_bigendian (p, iword, length);
 //   dwarf2_emit_insn (2);
 
   while (ISSPACE (*op_end))
@@ -302,31 +414,22 @@ void
 md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
 	      valueT * valP ATTRIBUTE_UNUSED, segT seg ATTRIBUTE_UNUSED)
 {
-//   char *buf = fixP->fx_where + fixP->fx_frag->fr_literal;
-//   long val = *valP;
+  char *buf = fixP->fx_where + fixP->fx_frag->fr_literal;
+  long val = *valP;
 //   long newval;
-//   long max, min;
+  long max, min;
+  int shift;
 
-//   max = min = 0;
-//   switch (fixP->fx_r_type)
-//     {
-//     case BFD_RELOC_32:
-//       if (target_big_endian)
-// 	{
-// 	  buf[0] = val >> 24;
-// 	  buf[1] = val >> 16;
-// 	  buf[2] = val >> 8;
-// 	  buf[3] = val >> 0;
-// 	}
-//       else
-// 	{
-// 	  buf[3] = val >> 24;
-// 	  buf[2] = val >> 16;
-// 	  buf[1] = val >> 8;
-// 	  buf[0] = val >> 0;
-// 	}
-//       buf += 4;
-//       break;
+  max = min = 0;
+  switch (fixP->fx_r_type)
+    {
+    case BFD_RELOC_32:
+	  buf[0] = val >> 24;
+	  buf[1] = val >> 16;
+	  buf[2] = val >> 8;
+	  buf[3] = val >> 0;
+      buf += 4;
+      break;
 
 //     case BFD_RELOC_16:
 //       if (target_big_endian)
@@ -359,15 +462,15 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
 //       md_number_to_chars (buf, newval, 2);
 //       break;
 
-//     default:
-//       abort ();
-//     }
+    default:
+      abort ();
+    }
 
-//   if (max != 0 && (val < min || val > max))
-//     as_bad_where (fixP->fx_file, fixP->fx_line, _("offset out of range"));
+  if (max != 0 && (val < min || val > max))
+    as_bad_where (fixP->fx_file, fixP->fx_line, _("Offset out of range."));
 
-//   if (fixP->fx_addsy == NULL && fixP->fx_pcrel == 0)
-//     fixP->fx_done = 1;
+  if (fixP->fx_addsy == NULL && fixP->fx_pcrel == 0)
+    fixP->fx_done = 1;
 }
 
 /* Put number into target byte order.  */
@@ -486,17 +589,18 @@ long
 md_pcrel_from (fixS *fixP)
 {
     valueT addr = fixP->fx_where + fixP->fx_frag->fr_address;
-    return addr - 1;
+    // return addr - 1;
+    fprintf(stderr, "md_pcrel_from 0x%d\n", fixP->fx_r_type);
 
-//   switch (fixP->fx_r_type)
-//     {
-//     case BFD_RELOC_32:
-//       return addr + 4;
+  switch (fixP->fx_r_type)
+    {
+    case BFD_RELOC_32:
+      return addr + 4;
 //     case BFD_RELOC_MOXIE_10_PCREL:
 //       /* Offset is from the end of the instruction.  */
 //       return addr + 2;
-//     default:
-//       abort ();
-//       return addr;
-//     }
+    default:
+      abort ();
+      return addr;
+    }
 }

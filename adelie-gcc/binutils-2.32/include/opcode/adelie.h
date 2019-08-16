@@ -35,9 +35,9 @@
 //  Length of 24
 #define ADELIE_F2           0b10000000
 #define ADELIE_F2_3REG      0b10000000  //  3 registers
-#define ADELIE_F2_2REG_IMM  0b10100000  //  2 registers + 6-bit immediate
-#define ADELIE_F2_1REG_IMM  0b11000000  //  1 register + 11-bit immediate
-#define ADELIE_F2_IMM       0b11100000  //  16-bit immediate
+#define ADELIE_F2_2REG_IMM  0b10010000  //  2 registers + 6-bit immediate
+#define ADELIE_F2_1REG_IMM  0b10100000  //  1 register + 11-bit immediate
+#define ADELIE_F2_IMM       0b10110000  //  16-bit immediate
 
 //  Length of 32
 #define ADELIE_F3           0b11000000

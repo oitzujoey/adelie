@@ -229,7 +229,7 @@ const adelie_opc_info_t adelie_form2_opc_info[64] =
   
 const adelie_opc_info_t adelie_form3_opc_info[64] =
   {
-    { 0x00, ADELIE_F3_1REG_IMM, "bad" },
+    { 0x00, ADELIE_F3_1REG_IMM, "ldi.m" },
     { 0x01, ADELIE_F3_1REG_IMM, "bad" },
     { 0x02, ADELIE_F3_1REG_IMM, "bad" },
     { 0x03, ADELIE_F3_1REG_IMM, "bad" },

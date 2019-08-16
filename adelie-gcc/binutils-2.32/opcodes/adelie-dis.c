@@ -29,8 +29,6 @@
 #include "opcode/adelie.h"
 #include "disassemble.h"
 
-// extern const adelie_opc_info_t adelie_opc_info[128];
-
 static fprintf_ftype fpr;
 static void *stream;
 
@@ -46,24 +44,123 @@ static void *stream;
 int
 print_insn_adelie (bfd_vma addr, struct disassemble_info * info)
 {
-  int length = 1;
+  //  Instruction length in bytes
+  int length = 0;
   int status;
   stream = info->stream;
+  //  Temporary buffer to store bytes from memory
+  bfd_byte buffer[3];
+  //  Opcode information
   const adelie_opc_info_t * opcode;
-  bfd_byte buffer[4];
-  unsigned short iword;
+  //  Instruction word
+  unsigned long iword;
+  
   fpr = info->fprintf_func;
 
-  if ((status = info->read_memory_func (addr, buffer, 1, info)))
+  //  Read opcode from memory
+  if ((status = info->read_memory_func (addr, buffer, 1, info))) {
     goto fail;
-  
-  iword = bfd_getb16(buffer);
+  }
 
-  opcode = &adelie_opc_info[iword & 0xFF];
+  //  Put opcode into the instruction word.
+  iword = buffer[0]<<24;
+
+  //  Disassemble instructions with length of 1 byte
+  if ((iword & ADELIE_LEN_MASK) == ADELIE_F0) {
+
+    opcode = &adelie_form0_opc_info[buffer[0] & 0x3F];
+    length = 1;
+  }
+
+  //  Disassemble instructions with length of 2 bytes
+  if ((iword & ADELIE_LEN_MASK) == ADELIE_F1) {
+    
+    //  Get the operands
+    opcode = &adelie_form1_opc_info[buffer[0] & 0x3F];
+    length = 2;
+
+    if ((status = info->read_memory_func (addr, buffer, 1, info))) {
+      goto fail;
+    }
+
+    switch (opcode->itype)
+    {
+    case ADELIE_F1_1REG:
+      
+      break;
+    
+    case ADELIE_F1_IMM:
+      
+      break;
+    
+    default:
+      abort();
+    }
+  }
+
+  //  Disassemble instructions with length of 3 bytes
+  if ((iword & ADELIE_LEN_MASK) == ADELIE_F2) {
+
+    opcode = &adelie_form2_opc_info[buffer[0] & 0x3F];
+    length = 3;
+
+    if ((status = info->read_memory_func (addr, buffer, 2, info))) {
+      goto fail;
+    }
+
+    switch (opcode->itype)
+    {
+    case ADELIE_F2_3REG:
+      
+      break;
+    
+    case ADELIE_F2_2REG_IMM:
+      
+      break;
+    
+    case ADELIE_F2_1REG_IMM:
+      
+      break;
+    
+    case ADELIE_F2_IMM:
+      
+      break;
+    
+    default:
+      abort();
+    }
+  }
+
+  //  Disassemble instructions with length of 4 bytes
+  if ((iword & ADELIE_LEN_MASK) == ADELIE_F3) {
+
+    opcode = &adelie_form3_opc_info[buffer[0] & 0x3F];
+    length = 4;
+
+    if ((status = info->read_memory_func (addr, buffer, 3, info))) {
+      goto fail;
+    }
+
+    switch (opcode->itype)
+    {
+    case ADELIE_F3_1REG_IMM:
+      
+      break;
+    
+    case ADELIE_F3_IMM:
+      
+      break;
+    
+    default:
+      abort();
+    }
+  }
+
+  if (0 == length) {
+    abort();
+  }
 
   fpr(stream, "%s", opcode->name);
-
-  length = 1;
 
   return length;
 

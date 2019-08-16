@@ -1,12 +1,28 @@
 ar: `u' modifier ignored since `D' is the default (see `U')
-../../libiberty/dyn-string.c: In function 'dyn_string_insert_cstr':
-../../libiberty/dyn-string.c:280:3: warning: 'strncpy' output truncated before terminating nul copying as many bytes from a string as its length [-Wstringop-truncation]
+In file included from /usr/include/string.h:630,
+                 from ../../libiberty/dyn-string.c:38:
+../../libiberty/dyn-string.c: In function ‘dyn_string_insert_cstr’:
+../../libiberty/dyn-string.c:280:3: warning: ‘__builtin_strncpy’ output truncated before terminating nul copying as many bytes from a string as its length [-Wstringop-truncation]
   280 |   strncpy (dest->s + pos, src, length);
-      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |   ^~~~~~~
 ../../libiberty/dyn-string.c:272:16: note: length computed here
   272 |   int length = strlen (src);
       |                ^~~~~~~~~~~~
-../../binutils/wrstabs.c: In function 'stab_start_class_type':
-../../binutils/wrstabs.c:1476:4: warning: '%s' directive argument is null [-Wformat-overflow=]
+In file included from ../../binutils/syslex_wrap.c:25:
+syslex.c: In function ‘yy_get_next_buffer’:
+syslex.c:1226:44: warning: comparison of integer expressions of different signedness: ‘int’ and ‘yy_size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+ 1226 |  if ((int) ((yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
+      |                                            ^
+arlex.c: In function ‘yy_get_next_buffer’:
+arlex.c:1352:44: warning: comparison of integer expressions of different signedness: ‘int’ and ‘yy_size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+ 1352 |  if ((int) ((yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
+      |                                            ^
+../../binutils/wrstabs.c: In function ‘stab_start_class_type’:
+../../binutils/wrstabs.c:1476:4: warning: ‘%s’ directive argument is null [-Wformat-overflow=]
  1476 |    sprintf (vtable, "~%%%s", vstring);
       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../../ld/ldlex-wrapper.c:26:
+ldlex.c: In function ‘yy_get_next_buffer’:
+ldlex.c:3540:44: warning: comparison of integer expressions of different signedness: ‘int’ and ‘yy_size_t’ {aka ‘long unsigned int’} [-Wsign-compare]
+ 3540 |  if ((int) ((yy_n_chars) + number_to_move) > YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
+      |                                            ^

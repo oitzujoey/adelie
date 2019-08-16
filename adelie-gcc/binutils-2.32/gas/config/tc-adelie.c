@@ -62,20 +62,22 @@ md_operand (expressionS *op __attribute__((unused)))
 void
 md_begin (void)
 {
-  // int count;
+  int count;
   const adelie_opc_info_t *opcode;
   opcode_hash_control = hash_new ();
 
   /* Insert names into hash table.  */
-  for (opcode = adelie_opc_info; opcode->name; opcode++)
-  // for (count = 0, opcode = adelie_opc_info; count++ < 256; opcode++)
+  for (count = 0, opcode = adelie_form0_opc_info; count++ < 64; opcode++)
     hash_insert (opcode_hash_control, opcode->name, (char *) opcode);
 
-//   for (count = 0, opcode = moxie_form2_opc_info; count++ < 4; opcode++)
-//     hash_insert (opcode_hash_control, opcode->name, (char *) opcode);
+  for (count = 0, opcode = adelie_form1_opc_info; count++ < 64; opcode++)
+    hash_insert (opcode_hash_control, opcode->name, (char *) opcode);
 
-//   for (count = 0, opcode = moxie_form3_opc_info; count++ < 10; opcode++)
-//     hash_insert (opcode_hash_control, opcode->name, (char *) opcode);
+  for (count = 0, opcode = adelie_form2_opc_info; count++ < 64; opcode++)
+    hash_insert (opcode_hash_control, opcode->name, (char *) opcode);
+
+  for (count = 0, opcode = adelie_form3_opc_info; count++ < 64; opcode++)
+    hash_insert (opcode_hash_control, opcode->name, (char *) opcode);
 
 //   target_big_endian = TARGET_BYTES_BIG_ENDIAN;
 

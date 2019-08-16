@@ -18,58 +18,42 @@
    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA
    02110-1301, USA.  */
 
-/* Form 1 instructions come in different flavors:
+/*  
+*/
 
-    Some have no arguments                          (MOXIE_F1_NARG)
-    Some only use the A operand                     (MOXIE_F1_A)
-    Some use A and B registers                      (MOXIE_F1_AB)
-    Some use A and consume a 4 byte immediate value (MOXIE_F1_A4)
-    Some use just a 4 byte immediate value          (MOXIE_F1_4)
-    Some use just a 4 byte memory address           (MOXIE_F1_M)
-    Some use B and an indirect A                    (MOXIE_F1_AiB)
-    Some use A and an indirect B                    (MOXIE_F1_ABi)
-    Some consume a 4 byte immediate value and use X (MOXIE_F1_4A)
-    Some use B and an indirect A plus 2 byte offset (MOXIE_F1_AiB2)
-    Some use A and an indirect B plus 2 byte offset (MOXIE_F1_ABi2)
+#define ADELIE_LEN_MASK     0b11000000
 
-  Form 2 instructions also come in different flavors:
+//  Length of 8
+#define ADELIE_F0           0b00000000
+// #define ADELIE_F0_NARG      0b00000000  //  No arguments, only option
 
-    Some have no arguments                          (MOXIE_F2_NARG)
-    Some use the A register and an 8-bit value      (MOXIE_F2_A8V)
+//  Length of 16
+#define ADELIE_F1           0b01000000
+#define ADELIE_F1_1REG      0b01000000  //  1 register
+#define ADELIE_F1_IMM       0b01100000  //  8-bit immediate
 
-  Form 3 instructions also come in different flavors:
+//  Length of 24
+#define ADELIE_F2           0b10000000
+#define ADELIE_F2_3REG      0b10000000  //  3 registers
+#define ADELIE_F2_2REG_IMM  0b10100000  //  2 registers + 6-bit immediate
+#define ADELIE_F2_1REG_IMM  0b11000000  //  1 register + 11-bit immediate
+#define ADELIE_F2_IMM       0b11100000  //  16-bit immediate
 
-    Some have no arguments                          (MOXIE_F3_NARG)
-    Some have a 10-bit PC relative operand          (MOXIE_F3_PCREL).  */
+//  Length of 32
+#define ADELIE_F3           0b11000000
+#define ADELIE_F3_1REG_IMM  0b11000000  //  1 register + 19-bit immediate
+#define ADELIE_F3_IMM       0b11100000  //  24-bit immediate
 
-// #define MOXIE_F1_NARG 0x100
-// #define MOXIE_F1_A    0x101
-// #define MOXIE_F1_AB   0x102
-// /* #define MOXIE_F1_ABC  0x103 */
-// #define MOXIE_F1_A4   0x104
-// #define MOXIE_F1_4    0x105
-// #define MOXIE_F1_AiB  0x106
-// #define MOXIE_F1_ABi  0x107
-// #define MOXIE_F1_4A   0x108
-// #define MOXIE_F1_AiB2 0x109
-// #define MOXIE_F1_ABi2 0x10a
-// #define MOXIE_F1_M    0x10b
-
-// #define MOXIE_F2_NARG 0x200
-// #define MOXIE_F2_A8V  0x201
-
-// #define MOXIE_F3_NARG  0x300
-// #define MOXIE_F3_PCREL 0x301
-
-// #define MOXIE_BAD     0x400
+#define ADELIE_BAD          0b11111111  //  Bad instruction
 
 typedef struct adelie_opc_info_t
 {
   short         opcode;
-//   unsigned      itype;
+  unsigned      itype;
   const char *  name;
 } adelie_opc_info_t;
 
-extern const adelie_opc_info_t adelie_opc_info[256];
-// extern const adelie_opc_info_t moxie_form2_opc_info[4];
-// extern const adelie_opc_info_t moxie_form3_opc_info[16];
+extern const adelie_opc_info_t adelie_form0_opc_info[64];
+extern const adelie_opc_info_t adelie_form1_opc_info[64];
+extern const adelie_opc_info_t adelie_form2_opc_info[64];
+extern const adelie_opc_info_t adelie_form3_opc_info[64];

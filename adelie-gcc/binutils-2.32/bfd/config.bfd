@@ -504,7 +504,7 @@ case "${targ}" in
     ;;
 
   adelie-*-elf)
-    targ_defvec=bfd_elf32_adelie_vec
+    targ_defvec=adelie_elf32_vec
     ;;
 
   moxie-*-elf | moxie-*-rtems* | moxie-*-uclinux)

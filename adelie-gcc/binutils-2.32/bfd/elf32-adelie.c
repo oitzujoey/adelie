@@ -149,7 +149,7 @@ static reloc_howto_type *adelie_elf_reloc_name_lookup(bfd *abfd ATTRIBUTE_UNUSED
     return NULL;
 }
 
-static void adelie_elf_info_howto_(bfd *abfd ATTRIBUTE_UNUSED, arelent *cache_ptr, Elf_Internal_Rela *dst) {
+static void adelie_elf_info_to_howto(bfd *abfd ATTRIBUTE_UNUSED, arelent *cache_ptr, Elf_Internal_Rela *dst) {
     
     unsigned int r;
 
@@ -165,7 +165,7 @@ static void adelie_elf_info_howto_(bfd *abfd ATTRIBUTE_UNUSED, arelent *cache_pt
 #define ELF_MAXPAGESIZE		0x1
 
 // #define TARGET_BIG_SYM		adelie_elf32_be_vec
-#define TARGET_BIG_SYM		bfd_elf32_adelie_vec
+#define TARGET_BIG_SYM		adelie_elf32_vec
 #define TARGET_BIG_NAME		"elf32-adelie"
 // #define TARGET_LITTLE_SYM	adelie_elf32_le_vec
 // #define TARGET_LITTLE_NAME	"elf32-littleadelie"

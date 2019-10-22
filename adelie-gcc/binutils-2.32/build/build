@@ -4,6 +4,8 @@ make distclean
 
 if [ "$1" != "clean" ]
 then
-	../configure --target=$1 CPPFLAGS=-DDEBUG CXXFLAGS="-g -O0" && printf "\nStarting build with target=$1\n" && make -j 10 > log 2> err
+	../configure --target=$1 CPPFLAGS=-DDEBUG CXXFLAGS="-g -O0" && printf "\nStarting build with target=$1\n" && make -j 10 > log 2> >(tee err >&2)
 #	../configure --target=$1 CPPFLAGS=-DDEBUG CXXFLAGS="-g -O0" && printf "\nStarting build with target=$1\n" && make -j 10 &> log
+
+#	nano err
 fi

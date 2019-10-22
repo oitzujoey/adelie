@@ -31,13 +31,13 @@ const bfd_arch_info_type bfd_adelie_arch =
     32,		      /* 32 bits in an address.  */
     8,		      /* 8 bits in a byte.  */
     bfd_arch_adelie,   /* enum bfd_architecture arch.  */
-    bfd_mach_adelie,
+    bfd_mach_adelie,    /* Machine value, used to distinguish between adelie variants.  */
     "adelie",	      /* Arch name.  */
     "adelie",	      /* Printable name.  */
-    2,		      /* Unsigned int section alignment power.  */
-    TRUE,	      /* The one and only. (Is default architecture?)  */
+    2,	/* log2 of unsigned int section alignment in bytes */
+    TRUE,             /* True if this is the default machine for the architecture.  */
     bfd_default_compatible,
-    bfd_default_scan,
-    bfd_arch_default_fill,
-    0,
+    bfd_default_scan, /* Function to call to determine if two different architectures are compatible.  */
+    bfd_arch_default_fill, /* Function to call to determine if a given string matches this architecture.  */ 
+    NULL       /*  Next in list. Other "bfd_arch_info"s would normally go here */
   };

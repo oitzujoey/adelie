@@ -42,6 +42,7 @@ static void *stream;
 //   { "$fp", "$sp", "$r0", "$r1", "$r2", "$r3", "$r4", "$r5",
 //     "$r6", "$r7", "$r8", "$r9", "$r10", "$r11", "$r12", "$r13" };
 
+//  
 int
 print_insn_adelie (bfd_vma addr, struct disassemble_info * info)
 {
@@ -64,7 +65,7 @@ print_insn_adelie (bfd_vma addr, struct disassemble_info * info)
   }
 
   //  Put opcode into the instruction word.
-  iword = buffer[0]<<24;
+  iword = buffer[0];
 
   //  Disassemble instructions with length of 1 byte
   if ((iword & ADELIE_LEN_MASK) == ADELIE_F0) {

@@ -29,6 +29,13 @@
 
 extern const adelie_opc_info_t adelie_opc_info[256];
 
+/* This array holds the chars that only start a comment at the beginning of
+   a line.  If the line seems to have the form '# 123 filename'
+   .line and .file directives will appear in the pre-processed output.	*/
+/* Note that input_file.c hand checks for '#' at the beginning of the
+   first line of the input file.  This is because the compiler outputs
+   #NO_APP at the beginning of its output.  */
+/* Also note that comments like this one will always work.  */
 const char comment_chars[]        = "#";
 const char line_separator_chars[] = ";";
 const char line_comment_chars[]   = "#";
@@ -36,12 +43,25 @@ const char line_comment_chars[]   = "#";
 static int pending_reloc;
 static struct hash_control *opcode_hash_control;
 
+/* This table describes all the machine specific pseudo-ops the assembler
+   has to support.  The fields are:
+     pseudo-op name without dot
+     function to call to execute this pseudo-op
+     Integer arg to pass to the function.  */
+
 const pseudo_typeS md_pseudo_table[] =
 {
   {0, 0, 0}
 };
 
+/* Chars that mean this number is a floating point constant.  */
+/* As in 0f12.456  */
+/* or	 0d1.2345e12  */
+
 const char FLT_CHARS[] = "rRsSfFdDxXpP";
+
+/* Chars that can be used to separate mant
+   from exp in floating point numbers.	*/
 const char EXP_CHARS[] = "eE";
 
 // static valueT md_chars_to_number (char * buf, int n);
@@ -49,6 +69,8 @@ const char EXP_CHARS[] = "eE";
 /* Byte order.  */
 // extern int target_big_endian;
 
+/* We handle all bad expressions here, so that we can report the faulty
+   instruction in the error message.  */
 void
 md_operand (expressionS *op __attribute__((unused)))
 {
@@ -169,6 +191,8 @@ md_assemble (char *str)
 
   int nlen = 0;
 
+  printf("Assembly: %s\n", str);
+
   /* Drop leading whitespace.  */
   while (*str == ' ')
     str++;
@@ -194,7 +218,7 @@ md_assemble (char *str)
   }
 
   //  Create the proper number of frags for the length.
-  switch (opcode->itype)
+  switch (opcode->itype & ADELIE_LEN_MASK)
   {
   case ADELIE_F0:
     length = 1;
@@ -217,12 +241,14 @@ md_assemble (char *str)
   }
 
   //  Put opcode into the instruction word.
-  iword = opcode->opcode << (8*(length-1));
-  p = frag_more(1);
+  iword = (opcode->opcode | (opcode->itype & ADELIE_LEN_MASK)) << (8*(length-1));
 
   switch (opcode->itype)
   {
   case ADELIE_F0:
+
+    p = frag_more(1);
+
     iword = opcode->opcode;
 
     while (ISSPACE(*op_end)) {
@@ -252,7 +278,7 @@ md_assemble (char *str)
     break;
   
   case ADELIE_F3_1REG_IMM:
-    
+
     while (ISSPACE(*op_end)) {
       op_end++;
     }
@@ -268,7 +294,7 @@ md_assemble (char *str)
     }
 
     regnum = op_end[2] - '0';
-    if ((regnum < 1) || (regnum > 7)) {
+    if ((regnum < 0) || (regnum >= 8)) {
       as_bad("Illegal register number.");
       ignore_rest_of_line();
       return;
@@ -279,7 +305,7 @@ md_assemble (char *str)
       op_end++;
     }
 
-    iword += (regnum << 19);
+    iword += regnum << 19;
 
     if (*op_end != ',') {
       as_bad("Expecting comma delimited operands.");
@@ -288,16 +314,23 @@ md_assemble (char *str)
     }
     op_end++;
 
+    p = frag_more(0);
+
     op_end = parse_exp_save_ilp(op_end, &arg);
-    where = frag_more(length-1);
+    where = frag_more(0);
     fix_new_exp(
       frag_now,
       (where - frag_now->fr_literal),
-      length-1,
+      3,
       &arg,
       0,
+      // BFD_RELOC_16
       BFD_RELOC_32
     );
+
+    p = frag_more(4);
+
+    // iword >>= 16;
 
     break;
   
@@ -308,7 +341,10 @@ md_assemble (char *str)
     abort();
   }
 
+  printf("iword: %lX\n", iword);
+
   number_to_chars_bigendian (p, iword, length);
+
 //   dwarf2_emit_insn (2);
 
   while (ISSPACE (*op_end))
@@ -424,26 +460,18 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
   switch (fixP->fx_r_type)
     {
     case BFD_RELOC_32:
-	  buf[0] = val >> 24;
-	  buf[1] = val >> 16;
-	  buf[2] = val >> 8;
-	  buf[3] = val >> 0;
+      buf[0] |= val >> 24;
+      buf[1] |= val >> 16;
+      buf[2] |= val >> 8;
+      buf[3] |= val >> 0;
       buf += 4;
       break;
 
-//     case BFD_RELOC_16:
-//       if (target_big_endian)
-// 	{
-// 	  buf[0] = val >> 8;
-// 	  buf[1] = val >> 0;
-// 	}
-//       else
-// 	{
-// 	  buf[1] = val >> 8;
-// 	  buf[0] = val >> 0;
-// 	}
-//       buf += 2;
-//       break;
+    case BFD_RELOC_16:
+      buf[0] = val >> 8;
+      buf[1] = val >> 0;
+      buf += 2;
+      break;
 
 //     case BFD_RELOC_8:
 //       *buf++ = val;

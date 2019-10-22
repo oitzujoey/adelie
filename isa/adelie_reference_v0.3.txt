@@ -31,8 +31,8 @@ user            transfer control to user
 
 not r0          r0 = ~r0                16'{2'1, 6'^, 5'r0, 3'x}
 neg r0          r0 = -r0                16'{2'1, 6'^, 5'r0, 3'x}
-sex.b r0        r0 = sex(r0)            16'{2'1, 6'^, 5'r0, 3'x}
-sex.s r0        r0 = sex(r0)            16'{2'1, 6'^, 5'r0, 3'x}
+sgnx.b r0        r0 = sgnx(r0)            16'{2'1, 6'^, 5'r0, 3'x}
+sgnx.s r0        r0 = sgnx(r0)            16'{2'1, 6'^, 5'r0, 3'x}
 pop.b r0        r0 = mem[sp++]          16'{2'1, 6'^, 5'r0, 3'x}
 push.b r0       mem[--sp] = r0          16'{2'1, 6'^, 5'r0, 3'x}
 pop.s r0        r0 = mem[sp++]          16'{2'1, 6'^, 5'r0, 3'x}

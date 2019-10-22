@@ -363,6 +363,9 @@
 /* Morpho MT.   Written in the absense of an ABI.  */
 #define EM_MT			0x2530
 
+/* Adelie backend. */
+#define EM_ADELIE 0x32BC
+
 /* FR30 magic number - no EABI available.  */
 #define EM_CYGNUS_FR30		0x3330
 
@@ -389,9 +392,6 @@
 
 /* Ubicom IP2xxx;   Written in the absense of an ABI.  */
 #define EM_IP2K_OLD		0x8217
-
-/* Adelie backend. */
-#define EM_ADELIE 0x8BC3
 
 /* Cygnus PowerPC ELF backend.  Written in the absence of an ABI.  */
 #define EM_CYGNUS_POWERPC	0x9025

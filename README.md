@@ -15,4 +15,4 @@ Based upon these goals, here are the current specifications for version 0.3 (cur
     I don't like pure RISC. It may be fast, but the code density is horrible. CISC is large and slow, but it has good instruction density. If I keep the complexity of peripherals to a minimum, I should have space to keep instruction fetch speedy and still have good instruction density. Besides, (as far as I know) after Pentium Pro, it became impossible to categorize any powerful CPUs as purely RISC or CISC.
 * Memory-mapped I/O
 
-These features should be sufficient for goal #1. Goal #2 may add more specifications, but a complete system is currently outside of the scope of this project since it is just an ISA.
+These features should be sufficient for goal #1. Goal #2 may add more specifications, but a even a small system is a long way away.

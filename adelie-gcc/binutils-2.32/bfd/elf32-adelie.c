@@ -149,7 +149,7 @@ static reloc_howto_type *adelie_elf_reloc_name_lookup(bfd *abfd ATTRIBUTE_UNUSED
     return NULL;
 }
 
-static void adelie_elf_info_to_howto(bfd *abfd ATTRIBUTE_UNUSED, arelent *cache_ptr, Elf_Internal_Rela *dst) {
+static bfd_boolean adelie_elf_info_to_howto(bfd *abfd ATTRIBUTE_UNUSED, arelent *cache_ptr, Elf_Internal_Rela *dst) {
     
     unsigned int r;
 
@@ -158,6 +158,8 @@ static void adelie_elf_info_to_howto(bfd *abfd ATTRIBUTE_UNUSED, arelent *cache_
     BFD_ASSERT(r < (unsigned int) R_ADELIE_max);
 
     cache_ptr->howto = &adelie_elf_howto_table[r];
+
+    return 0;
 }
 
 #define ELF_ARCH		bfd_arch_adelie

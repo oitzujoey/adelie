@@ -6,18 +6,6 @@ ar: `u' modifier ignored since `D' is the default (see `U')
 ../../libiberty/dyn-string.c:272:16: note: length computed here
   272 |   int length = strlen (src);
       |                ^~~~~~~~~~~~
-../../bfd/elf32-adelie.c:174:29: warning: initialization of ‘bfd_boolean (*)(bfd *, arelent *, Elf_Internal_Rela *)’ {aka ‘int (*)(struct bfd *, struct reloc_cache_entry *, struct elf_internal_rela *)’} from incompatible pointer type ‘void (*)(bfd *, arelent *, Elf_Internal_Rela *)’ {aka ‘void (*)(struct bfd *, struct reloc_cache_entry *, struct elf_internal_rela *)’} [-Wincompatible-pointer-types]
-  174 | #define elf_info_to_howto   adelie_elf_info_to_howto
-      |                             ^~~~~~~~~~~~~~~~~~~~~~~~
-./elf32-target.h:780:3: note: in expansion of macro ‘elf_info_to_howto’
-  780 |   elf_info_to_howto,
-      |   ^~~~~~~~~~~~~~~~~
-../../bfd/elf32-adelie.c:174:29: note: (near initialization for ‘elf32_bed.elf_info_to_howto’)
-  174 | #define elf_info_to_howto   adelie_elf_info_to_howto
-      |                             ^~~~~~~~~~~~~~~~~~~~~~~~
-./elf32-target.h:780:3: note: in expansion of macro ‘elf_info_to_howto’
-  780 |   elf_info_to_howto,
-      |   ^~~~~~~~~~~~~~~~~
 ../../gas/config/tc-adelie.c: In function ‘md_apply_fix’:
 ../../gas/config/tc-adelie.c:457:7: warning: unused variable ‘shift’ [-Wunused-variable]
   457 |   int shift;
@@ -26,16 +14,7 @@ ar: `u' modifier ignored since `D' is the default (see `U')
 ../../gas/config/tc-adelie.c:346:3: warning: ‘p’ may be used uninitialized in this function [-Wmaybe-uninitialized]
   346 |   number_to_chars_bigendian (p, iword, length);
       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/mnt/c/Users/User/Documents/Computing/Programming/adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/defparse.y: warning: 27 shift/reduce conflicts [-Wconflicts-sr]
-/mnt/c/Users/User/Documents/Computing/Programming/adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/rcparse.y: warning: 58 shift/reduce conflicts [-Wconflicts-sr]
-/mnt/c/Users/User/Documents/Computing/Programming/adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/rcparse.y: warning: 10 reduce/reduce conflicts [-Wconflicts-rr]
-/mnt/c/Users/User/Documents/Computing/Programming/adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/sysinfo.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
-/mnt/c/Users/User/Documents/Computing/Programming/adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/mcparse.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
 ../../binutils/wrstabs.c: In function ‘stab_start_class_type’:
 ../../binutils/wrstabs.c:1476:4: warning: ‘%s’ directive argument is null [-Wformat-overflow=]
  1476 |    sprintf (vtable, "~%%%s", vstring);
       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/mnt/c/Users/User/Documents/Computing/Programming/adelie/adelie-gcc/binutils-2.32/build/ld/../../ld/deffilep.y: warning: 76 shift/reduce conflicts [-Wconflicts-sr]
-/mnt/c/Users/User/Documents/Computing/Programming/adelie/adelie-gcc/binutils-2.32/build/ld/../../ld/ldlex.l:386: warning, rule cannot be matched
-ld.pod around line 568: Expected '=item *'
-POD document had syntax errors at /usr/bin/core_perl/pod2man line 69.

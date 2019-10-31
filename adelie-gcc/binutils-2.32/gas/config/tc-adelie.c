@@ -314,13 +314,15 @@ md_assemble (char *str)
     }
     op_end++;
 
-    p = frag_more(0);
+    // p = frag_more(0);
 
     op_end = parse_exp_save_ilp(op_end, &arg);
-    where = frag_more(0);
+    // where = frag_more(0);
+    p = frag_more(4);
     fix_new_exp(
       frag_now,
-      (where - frag_now->fr_literal),
+      // (where - frag_now->fr_literal),
+      (p - frag_now->fr_literal),
       3,
       &arg,
       0,
@@ -328,7 +330,7 @@ md_assemble (char *str)
       BFD_RELOC_32
     );
 
-    p = frag_more(4);
+    // p = frag_more(4);
 
     // iword >>= 16;
 

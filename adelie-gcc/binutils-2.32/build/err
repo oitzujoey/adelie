@@ -6,13 +6,17 @@ ar: `u' modifier ignored since `D' is the default (see `U')
 ../../libiberty/dyn-string.c:272:16: note: length computed here
   272 |   int length = strlen (src);
       |                ^~~~~~~~~~~~
+../../gas/config/tc-adelie.c: In function ‘md_assemble’:
+../../gas/config/tc-adelie.c:287:11: warning: unused variable ‘where’ [-Wunused-variable]
+  287 |     char *where;
+      |           ^~~~~
 ../../gas/config/tc-adelie.c: In function ‘md_apply_fix’:
-../../gas/config/tc-adelie.c:457:7: warning: unused variable ‘shift’ [-Wunused-variable]
-  457 |   int shift;
+../../gas/config/tc-adelie.c:459:7: warning: unused variable ‘shift’ [-Wunused-variable]
+  459 |   int shift;
       |       ^~~~~
 ../../gas/config/tc-adelie.c: In function ‘md_assemble’:
-../../gas/config/tc-adelie.c:346:3: warning: ‘p’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  346 |   number_to_chars_bigendian (p, iword, length);
+../../gas/config/tc-adelie.c:348:3: warning: ‘p’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  348 |   number_to_chars_bigendian (p, iword, length);
       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ../../binutils/wrstabs.c: In function ‘stab_start_class_type’:
 ../../binutils/wrstabs.c:1476:4: warning: ‘%s’ directive argument is null [-Wformat-overflow=]

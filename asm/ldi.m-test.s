@@ -1,10 +1,7 @@
-.data
-    			.global foo
-foo:            .long 0x123
-bar:            .long 0x456
-.text
     			.global _start
-_start:         ldi.m $r6, 0xffff
-				super
-test:			ldi.m $r5, test+0x10
-				user
+.text
+_start:         ldi.m $r1, 0x555
+				ldi.m $r2, 0x111+0x222
+				; The line below is causing the linker to not output anything.
+				; I think that this is a relocation issue.
+				ldi.m $r3, _start+0x10

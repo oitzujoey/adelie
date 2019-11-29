@@ -464,7 +464,7 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
     case BFD_RELOC_ADELIE_19_IMM:
       if (val >= (1<<19))
         as_bad_where (fixP->fx_file, fixP->fx_line, 
-                      _("imm to large BFD_RELOC_ADELIE_19"));
+                      _("imm too large BFD_RELOC_ADELIE_19"));
       buf[0] |= (val >> 16) & 0x7;
       buf[1] |= val >> 8;
       buf[2] |= val >> 0;

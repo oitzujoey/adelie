@@ -111,17 +111,34 @@ static reloc_howto_type adelie_elf_howto_table[] = {
         0x7ffff,                    //  src_mask
         0x7ffff,                    //  dst_mask
         FALSE                       //  pcrel_offset
-    )
-};
+    ),
 
+    /* A 19 bit Immediate relocation.  */
+    HOWTO(
+        R_ADELIE_IMM19,	            /* type.  */
+        0,			                /* rightshift.  */
+        2,			                /* size (0 = byte, 1 = short, 2 = long).  */
+        19,			                /* bitsize.  */
+        FALSE,			            /* pc_relative.  */
+        0,			                /* bitpos.  */
+        complain_overflow_signed,   /* complain_on_overflow.  */
+        bfd_elf_generic_reloc,	    /* special_function.  */
+        "R_ADELIE_IMM19",		    /* name.  */
+        FALSE,			            /* partial_inplace.  */
+        0,			                /* src_mask.  */
+        0x0007FFFF,		            /* dst_mask.  */
+        FALSE),			            /* pcrel_offset.  */
+};
+
 struct elf_reloc_map {
     bfd_reloc_code_real_type bfd_reloc_val;
     unsigned char elf_reloc_val;
 };
 
 static const struct elf_reloc_map adelie_reloc_map[] = {
-    {BFD_RELOC_NONE,    R_ADELIE_NONE},
-    {BFD_RELOC_32,      R_ADELIE_DIR32}
+    {BFD_RELOC_NONE,            R_ADELIE_NONE},
+    {BFD_RELOC_32,              R_ADELIE_DIR32},
+    {BFD_RELOC_ADELIE_19_IMM,   R_ADELIE_IMM19}
 };
 
 static reloc_howto_type *adelie_elf_reloc_type_lookup(bfd *abfd ATTRIBUTE_UNUSED, bfd_reloc_code_real_type code) {

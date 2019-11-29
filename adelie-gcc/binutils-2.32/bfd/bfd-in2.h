@@ -3169,8 +3169,7 @@ to compensate for the borrow when the low bits are added.  */
   BFD_RELOC_MIPS_JUMP_SLOT,
 
 /* Adelie ELF relocations. */
-// ADELIE_TODO I have no idea what this does
-// BFD_RELOC_ADELIE_10_PCREL,
+  BFD_RELOC_ADELIE_19_IMM,
 
 /* Moxie ELF relocations.  */
   BFD_RELOC_MOXIE_10_PCREL,

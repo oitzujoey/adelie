@@ -243,11 +243,11 @@ md_assemble (char *str)
   //  Put opcode into the instruction word.
   iword = (opcode->opcode | (opcode->itype & ADELIE_LEN_MASK)) << (8*(length-1));
 
+  p = frag_more(1);
+
   switch (opcode->itype)
   {
   case ADELIE_F0:
-
-    p = frag_more(1);
 
     iword = opcode->opcode;
 
@@ -317,20 +317,20 @@ md_assemble (char *str)
     // p = frag_more(0);
 
     op_end = parse_exp_save_ilp(op_end, &arg);
-    // where = frag_more(0);
-    p = frag_more(4);
+    where = frag_more(3);
+    // p = frag_more(3);
     fix_new_exp(
       frag_now,
-      // (where - frag_now->fr_literal),
-      (p - frag_now->fr_literal),
+      (where - frag_now->fr_literal),
+      // (p - frag_now->fr_literal),
       3,
       &arg,
       0,
       // BFD_RELOC_16
-      BFD_RELOC_32
+      BFD_RELOC_ADELIE_19_IMM
     );
 
-    // p = frag_more(4);
+    // p = frag_more(1);
 
     // iword >>= 16;
 
@@ -461,12 +461,14 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
   max = min = 0;
   switch (fixP->fx_r_type)
     {
-    case BFD_RELOC_32:
-      buf[0] |= val >> 24;
-      buf[1] |= val >> 16;
-      buf[2] |= val >> 8;
-      buf[3] |= val >> 0;
-      buf += 4;
+    case BFD_RELOC_ADELIE_19_IMM:
+      if (val >= (1<<19))
+        as_bad_where (fixP->fx_file, fixP->fx_line, 
+                      _("imm to large BFD_RELOC_ADELIE_19"));
+      buf[0] |= (val >> 16) & 0x7;
+      buf[1] |= val >> 8;
+      buf[2] |= val >> 0;
+      buf += 3;
       break;
 
     case BFD_RELOC_16:
@@ -624,8 +626,8 @@ md_pcrel_from (fixS *fixP)
 
   switch (fixP->fx_r_type)
     {
-    case BFD_RELOC_32:
-      return addr + 4;
+    case BFD_RELOC_ADELIE_19_IMM:
+      return addr + 3;
 //     case BFD_RELOC_MOXIE_10_PCREL:
 //       /* Offset is from the end of the instruction.  */
 //       return addr + 2;

@@ -1243,8 +1243,7 @@ static const char *const bfd_reloc_code_real_names[] = { "@@uninitialized@@",
   "BFD_RELOC_MIPS_COPY",
   "BFD_RELOC_MIPS_JUMP_SLOT",
 
-  // ADELIE_TODO
-  // "BFD_RELOC_ADELIE_10_PCREL"
+  "BFD_RELOC_ADELIE_19_IMM",
 
   "BFD_RELOC_MOXIE_10_PCREL",
 

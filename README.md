@@ -1,6 +1,7 @@
 # Adelie ISA
 
 There are two main goals of Adelie:
+
 1. Execute compiled C code  
     None of my other CPUs can run human readable languages. If a compiler exists for Adelie, it would be much easier to write and run programs. In addition, a C compiler would provide a massive amount of code that could be run on Adelie.
 2. Run Linux  

@@ -56,7 +56,7 @@ const pseudo_typeS md_pseudo_table[] =
 
 /* Chars that mean this number is a floating point constant.  */
 /* As in 0f12.456  */
-/* or	 0d1.2345e12  */
+/* or  0d1.2345e12  */
 
 const char FLT_CHARS[] = "rRsSfFdDxXpP";
 
@@ -64,7 +64,7 @@ const char FLT_CHARS[] = "rRsSfFdDxXpP";
    from exp in floating point numbers.	*/
 const char EXP_CHARS[] = "eE";
 
-// static valueT md_chars_to_number (char * buf, int n);
+static valueT md_chars_to_number (char * buf, int n);
 
 /* Byte order.  */
 // extern int target_big_endian;
@@ -146,20 +146,20 @@ parse_exp_save_ilp (char *s, expressionS *op)
 //     {
 //       reg = s[2] - '0';
 //       if ((reg < 0) || (reg > 9))
-// 	{
-// 	  as_bad (_("illegal register number"));
-// 	  ignore_rest_of_line ();
-// 	  return -1;
-// 	}
+//  {
+//    as_bad (_("illegal register number"));
+//    ignore_rest_of_line ();
+//    return -1;
+//  }
 //       if (reg == 1)
-// 	{
-// 	  int r2 = s[3] - '0';
-// 	  if ((r2 >= 0) && (r2 <= 3))
-// 	    {
-// 	      reg = 10 + r2;
-// 	      *ptr += 1;
-// 	    }
-// 	}
+//  {
+//    int r2 = s[3] - '0';
+//    if ((r2 >= 0) && (r2 <= 3))
+//      {
+//        reg = 10 + r2;
+//        *ptr += 1;
+//      }
+//  }
 //     }
 //   else
 //     {
@@ -454,28 +454,40 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
 {
   char *buf = fixP->fx_where + fixP->fx_frag->fr_literal;
   long val = *valP;
-//   long newval;
+  long newval;
   long max, min;
-  int shift;
+  // int shift;
 
   max = min = 0;
   switch (fixP->fx_r_type)
     {
+    // case BFD_RELOC_ADELIE_19_IMM:
+    //   if (val >= (1<<19))
+    //     as_bad_where (fixP->fx_file, fixP->fx_line, _("imm too large BFD_RELOC_ADELIE_19"));
+    //   buf[0] |= (val >> 16) & 0x7;
+    //   buf[1] |= val >> 8;
+    //   buf[2] |= val >> 0;
+    //   buf += 3;
+    //   break;
+
     case BFD_RELOC_ADELIE_19_IMM:
       if (val >= (1<<19))
-        as_bad_where (fixP->fx_file, fixP->fx_line, 
-                      _("imm too large BFD_RELOC_ADELIE_19"));
-      buf[0] |= (val >> 16) & 0x7;
-      buf[1] |= val >> 8;
-      buf[2] |= val >> 0;
-      buf += 3;
+        as_bad_where (fixP->fx_file, fixP->fx_line, _("imm too large BFD_RELOC_ADELIE_19"));
+      // buf[0] |= (val >> 16) & 0x7;
+      // buf[1] |= val >> 8;
+      // buf[2] |= val >> 0;
+      newval = md_chars_to_number(buf, 3);
+      newval += val & 0x0003ffff;
+      md_number_to_chars(buf, newval, 3);
+      // buf += 3;
+      
       break;
 
-    case BFD_RELOC_16:
-      buf[0] = val >> 8;
-      buf[1] = val >> 0;
-      buf += 2;
-      break;
+    // case BFD_RELOC_16:
+    //   buf[0] = val >> 8;
+    //   buf[1] = val >> 0;
+    //   buf += 2;
+    //   break;
 
 //     case BFD_RELOC_8:
 //       *buf++ = val;
@@ -483,9 +495,9 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
 
 //     case BFD_RELOC_MOXIE_10_PCREL:
 //       if (!val)
-// 	break;
+//         break;
 //       if (val < -1024 || val > 1022)
-// 	as_bad_where (fixP->fx_file, fixP->fx_line,
+//         as_bad_where (fixP->fx_file, fixP->fx_line,
 //                       _("pcrel too far BFD_RELOC_MOXIE_10"));
 //       /* 11 bit offset even numbered, so we remove right bit.  */
 //       val >>= 1;
@@ -508,38 +520,32 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
 /* Put number into target byte order.  */
 
 void
-md_number_to_chars (char * ptr, valueT use, int nbytes)
-{
-    number_to_chars_bigendian (ptr, use, nbytes);
+md_number_to_chars (char * ptr, valueT use, int nbytes) {
+
+  number_to_chars_bigendian (ptr, use, nbytes);
 }
 
 /* Convert from target byte order to host byte order.  */
 
-// static valueT
-// md_chars_to_number (char * buf, int n)
-// {
-//   valueT result = 0;
-//   unsigned char * where = (unsigned char *) buf;
+static valueT md_chars_to_number (char * buf, int n) {
 
-//   if (target_big_endian)
-//     {
-//       while (n--)
-// 	{
-// 	  result <<= 8;
-// 	  result |= (*where++ & 255);
-// 	}
-//     }
-//   else
-//     {
-//       while (n--)
-// 	{
-// 	  result <<= 8;
-// 	  result |= (where[n] & 255);
-// 	}
-//     }
+  valueT result = 0;
+  unsigned char * where = (unsigned char *) buf;
 
-//   return result;
-// }
+  // if (target_big_endian) {
+  while (n--) {
+    result <<= 8;
+    result |= (*where++ & 255);
+  }
+  // } else {
+  // while (n--) {
+  //   result <<= 8;
+  //   result |= (where[n] & 255);
+  // }
+  // }
+
+  return result;
+}
 
 /* Generate a machine-dependent relocation.  */
 arelent *
@@ -548,26 +554,28 @@ tc_gen_reloc (asection *section ATTRIBUTE_UNUSED, fixS *fixP)
   arelent *relP;
   bfd_reloc_code_real_type code;
 
-//   switch (fixP->fx_r_type)
-//     {
-//     case BFD_RELOC_32:
-//       code = fixP->fx_r_type;
-//       break;
-//     case BFD_RELOC_MOXIE_10_PCREL:
-//       code = fixP->fx_r_type;
-//       break;
-//     default:
-//       as_bad_where (fixP->fx_file, fixP->fx_line,
-// 		    _("Semantics error.  This type of operand can not be relocated, it must be an assembly-time constant"));
-//       return 0;
-//     }
+  switch (fixP->fx_r_type) {
+
+    // case BFD_RELOC_32:
+    //   code = fixP->fx_r_type;
+    //   break;
+
+    case BFD_RELOC_ADELIE_19_IMM:
+      code = fixP->fx_r_type;
+      break;
+
+    default:
+      as_bad_where (fixP->fx_file, fixP->fx_line,
+       _("Semantics error.  This type of operand can not be relocated, it must be an assembly-time constant"));
+      return 0;
+  }
 
   relP = XNEW (arelent);
   relP->sym_ptr_ptr = XNEW (asymbol *);
   *relP->sym_ptr_ptr = symbol_get_bfdsym (fixP->fx_addsy);
   relP->address = fixP->fx_frag->fr_address + fixP->fx_where;
 
-    code = fixP->fx_r_type;
+    // code = fixP->fx_r_type;
 //   relP->addend = fixP->fx_offset;
     relP->addend = fixP->fx_addnumber;
 
@@ -593,12 +601,12 @@ tc_gen_reloc (asection *section ATTRIBUTE_UNUSED, fixS *fixP)
      bfd_install_relocation uses the "special function" field of the
      howto, and does not execute the code that needs to be undone.  */
 
-//   if (OUTPUT_FLAVOR == bfd_target_aout_flavour
-//       && fixP->fx_addsy && S_IS_WEAK (fixP->fx_addsy)
-//       && ! bfd_is_und_section (S_GET_SEGMENT (fixP->fx_addsy)))
-//     {
-//       relP->addend -= S_GET_VALUE (fixP->fx_addsy);
-//     }
+  if (OUTPUT_FLAVOR == bfd_target_aout_flavour
+      && fixP->fx_addsy && S_IS_WEAK (fixP->fx_addsy)
+      && ! bfd_is_und_section (S_GET_SEGMENT (fixP->fx_addsy)))
+    {
+      relP->addend -= S_GET_VALUE (fixP->fx_addsy);
+    }
 
   relP->howto = bfd_reloc_type_lookup (stdoutput, code);
   if (! relP->howto)

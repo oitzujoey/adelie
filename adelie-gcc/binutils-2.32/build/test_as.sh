@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "--> AS <--"
-gas/as-new -o ldi.m-test.o ~/adelie/asm/ldi.m-test.s
+gas/as-new -o ldi.m-test.o ../../../asm/ldi.m-test.s
 echo ""
 echo "--> LD <--"
 ld/ld-new -o ldi.m-test ldi.m-test.o

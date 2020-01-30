@@ -3,6 +3,7 @@
 THREADS=$(($(nproc)+1))
 ARCH=$1
 LAST_ARCH=$(cat .build-arch)
+echo $ARCH > .build-arch
 
 if [ "$ARCH" = "clean" ]
 then
@@ -22,5 +23,3 @@ else
 
 #	nano err
 fi
-
-echo $ARCH > .build-arch

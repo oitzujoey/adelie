@@ -1,0 +1,13 @@
+ar: `u' modifier ignored since `D' is the default (see `U')
+/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/defparse.y: warning: 27 shift/reduce conflicts [-Wconflicts-sr]
+/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/sysinfo.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
+/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/rcparse.y: warning: 58 shift/reduce conflicts [-Wconflicts-sr]
+/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/rcparse.y: warning: 10 reduce/reduce conflicts [-Wconflicts-rr]
+/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/mcparse.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
+../../../binutils/doc/binutils.texi:819: warning: @ref node name should not contain `.'
+../../../binutils/doc/binutils.texi:1239: warning: @xref node name should not contain `.'
+/home/joey/Adelie/adelie-gcc/binutils-2.32/build/ld/../../ld/deffilep.y: warning: 76 shift/reduce conflicts [-Wconflicts-sr]
+/home/joey/Adelie/adelie-gcc/binutils-2.32/build/ld/../../ld/ldlex.l:386: warning, rule cannot be matched
+ld.pod around line 568: Expected '=item *'
+POD document had syntax errors at /usr/bin/pod2man line 71.
+../../ld/ld.texi:8376: warning: @pxref node name should not contain `.'

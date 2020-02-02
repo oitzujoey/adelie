@@ -4,10 +4,10 @@
 
 .vscode
 
-adelie-gcc/binutils-2.32/build/*
-!adelie-gcc/binutils-2.32/build/build
-!adelie-gcc/binutils-2.32/build/err
-!adelie-gcc/binutils-2.32/build/log
-!adelie-gcc/binutils-2.32/build/test_as.sh
+toolchain/binutils-2.32/build/*
+!toolchain/binutils-2.32/build/build
+!toolchain/binutils-2.32/build/err
+!toolchain/binutils-2.32/build/log
+!toolchain/binutils-2.32/build/test_as.sh
 
 *.code-workspace

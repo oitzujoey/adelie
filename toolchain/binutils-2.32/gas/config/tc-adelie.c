@@ -477,12 +477,14 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
       // buf[0] |= (val >> 16) & 0x7;
       // buf[1] |= val >> 8;
       // buf[2] |= val >> 0;
-      printf("%x %x %x\n", buf[0], buf[1], buf[2]);
-      newval = md_chars_to_number(buf, 3);
+      printf("%x\n", val);
+      printf("%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
+      newval = md_chars_to_number(buf, 4);
       printf("newval=%x\n", newval);
       newval += val & 0x0003ffff;
       printf("newval=%x\n", newval);
-      md_number_to_chars(buf, newval, 3);
+      md_number_to_chars(buf, newval, 4);
+      printf("%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
       // buf += 3;
       
       break;
@@ -580,8 +582,8 @@ tc_gen_reloc (asection *section ATTRIBUTE_UNUSED, fixS *fixP)
   relP->address = fixP->fx_frag->fr_address + fixP->fx_where;
 
     // code = fixP->fx_r_type;
-//   relP->addend = fixP->fx_offset;
-    relP->addend = fixP->fx_addnumber;
+  relP->addend = fixP->fx_offset;
+    // relP->addend = fixP->fx_addnumber;
 
   /* This is the standard place for KLUDGEs to work around bugs in
      bfd_install_relocation (first such note in the documentation
@@ -638,11 +640,8 @@ md_pcrel_from (fixS *fixP)
 
   switch (fixP->fx_r_type)
     {
-    // case BFD_RELOC_ADELIE_19_IMM:
-      // return addr + 3;
-//     case BFD_RELOC_MOXIE_10_PCREL:
-//       /* Offset is from the end of the instruction.  */
-//       return addr + 2;
+    case BFD_RELOC_ADELIE_19_IMM:
+      return addr + 4;
     default:
       abort ();
       return addr;

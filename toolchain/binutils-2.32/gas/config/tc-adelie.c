@@ -243,7 +243,9 @@ md_assemble (char *str)
   //  Put opcode into the instruction word.
   iword = (opcode->opcode | (opcode->itype & ADELIE_LEN_MASK)) << (8*(length-1));
 
-  p = frag_more(1);
+  // p = frag_more(1);
+
+  char *where;
 
   switch (opcode->itype)
   {
@@ -284,7 +286,6 @@ md_assemble (char *str)
     }
 
     expressionS arg;
-    char *where;
     int regnum;
 
     if ((*op_end != '$') || (*(op_end+1) != 'r')) {
@@ -317,13 +318,13 @@ md_assemble (char *str)
     // p = frag_more(0);
 
     op_end = parse_exp_save_ilp(op_end, &arg);
-    where = frag_more(3);
+    where = frag_more(4);
     // p = frag_more(3);
     fix_new_exp(
       frag_now,
       (where - frag_now->fr_literal),
       // (p - frag_now->fr_literal),
-      3,
+      4,
       &arg,
       0,
       // BFD_RELOC_16
@@ -345,7 +346,7 @@ md_assemble (char *str)
 
   printf("iword: %lX\n", iword);
 
-  number_to_chars_bigendian (p, iword, length);
+  number_to_chars_bigendian (where, iword, length);
 
 //   dwarf2_emit_insn (2);
 
@@ -450,7 +451,7 @@ md_show_usage (FILE *stream ATTRIBUTE_UNUSED)
 
 void
 md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
-	      valueT * valP ATTRIBUTE_UNUSED, segT seg ATTRIBUTE_UNUSED)
+        valueT * valP ATTRIBUTE_UNUSED, segT seg ATTRIBUTE_UNUSED)
 {
   char *buf = fixP->fx_where + fixP->fx_frag->fr_literal;
   long val = *valP;
@@ -476,8 +477,11 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
       // buf[0] |= (val >> 16) & 0x7;
       // buf[1] |= val >> 8;
       // buf[2] |= val >> 0;
+      printf("%x %x %x\n", buf[0], buf[1], buf[2]);
       newval = md_chars_to_number(buf, 3);
+      printf("newval=%x\n", newval);
       newval += val & 0x0003ffff;
+      printf("newval=%x\n", newval);
       md_number_to_chars(buf, newval, 3);
       // buf += 3;
       
@@ -511,7 +515,7 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
     }
 
   if (max != 0 && (val < min || val > max))
-    as_bad_where (fixP->fx_file, fixP->fx_line, _("Offset out of range."));
+    as_bad_where (fixP->fx_file, fixP->fx_line, _("Offset out of range"));
 
   if (fixP->fx_addsy == NULL && fixP->fx_pcrel == 0)
     fixP->fx_done = 1;
@@ -615,9 +619,9 @@ tc_gen_reloc (asection *section ATTRIBUTE_UNUSED, fixS *fixP)
 
       name = S_GET_NAME (fixP->fx_addsy);
       if (name == NULL)
-	    name = _("<unknown>");
+      name = _("<unknown>");
         as_fatal (_("Cannot generate relocation type for symbol %s, code %s"),
-		    name, bfd_get_reloc_code_name (code));
+            name, bfd_get_reloc_code_name (code));
     }
 
   return relP;
@@ -634,8 +638,8 @@ md_pcrel_from (fixS *fixP)
 
   switch (fixP->fx_r_type)
     {
-    case BFD_RELOC_ADELIE_19_IMM:
-      return addr + 3;
+    // case BFD_RELOC_ADELIE_19_IMM:
+      // return addr + 3;
 //     case BFD_RELOC_MOXIE_10_PCREL:
 //       /* Offset is from the end of the instruction.  */
 //       return addr + 2;

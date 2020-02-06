@@ -33,7 +33,7 @@ const bfd_arch_info_type bfd_adelie_arch = {
     bfd_mach_adelie,        /* Machine value, used to distinguish between adelie variants.  */
     "adelie",               /* Arch name.  */
     "adelie",               /* Printable name.  */
-    2,                      /* log2 of unsigned int section alignment in bytes */
+    0,                      /* log2 of unsigned int section alignment in bytes */
     TRUE,                   /* True if this is the default machine for the architecture.  */
     bfd_default_compatible,
     bfd_default_scan,       /* Function to call to determine if two different architectures are compatible.  */

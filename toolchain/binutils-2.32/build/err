@@ -1,13 +1,32 @@
 ar: `u' modifier ignored since `D' is the default (see `U')
-/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/defparse.y: warning: 27 shift/reduce conflicts [-Wconflicts-sr]
-/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/sysinfo.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
-/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/rcparse.y: warning: 58 shift/reduce conflicts [-Wconflicts-sr]
-/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/rcparse.y: warning: 10 reduce/reduce conflicts [-Wconflicts-rr]
-/home/joey/Adelie/adelie-gcc/binutils-2.32/build/binutils/../../binutils/mcparse.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
-../../../binutils/doc/binutils.texi:819: warning: @ref node name should not contain `.'
-../../../binutils/doc/binutils.texi:1239: warning: @xref node name should not contain `.'
-/home/joey/Adelie/adelie-gcc/binutils-2.32/build/ld/../../ld/deffilep.y: warning: 76 shift/reduce conflicts [-Wconflicts-sr]
-/home/joey/Adelie/adelie-gcc/binutils-2.32/build/ld/../../ld/ldlex.l:386: warning, rule cannot be matched
-ld.pod around line 568: Expected '=item *'
-POD document had syntax errors at /usr/bin/pod2man line 71.
-../../ld/ld.texi:8376: warning: @pxref node name should not contain `.'
+../../libiberty/dyn-string.c: In function ‘dyn_string_insert_cstr’:
+../../libiberty/dyn-string.c:280:3: warning: ‘strncpy’ output truncated before terminating nul copying as many bytes from a string as its length [-Wstringop-truncation]
+  280 |   strncpy (dest->s + pos, src, length);
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../libiberty/dyn-string.c:272:16: note: length computed here
+  272 |   int length = strlen (src);
+      |                ^~~~~~~~~~~~
+../../gas/config/tc-adelie.c: In function ‘md_apply_fix’:
+../../gas/config/tc-adelie.c:481:23: warning: format ‘%x’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long int’ [-Wformat=]
+  481 |       printf("newval=%x\n", newval);
+      |                      ~^     ~~~~~~
+      |                       |     |
+      |                       |     long int
+      |                       unsigned int
+      |                      %lx
+../../gas/config/tc-adelie.c:483:23: warning: format ‘%x’ expects argument of type ‘unsigned int’, but argument 2 has type ‘long int’ [-Wformat=]
+  483 |       printf("newval=%x\n", newval);
+      |                      ~^     ~~~~~~
+      |                       |     |
+      |                       |     long int
+      |                       unsigned int
+      |                      %lx
+/usr/bin/ld: write.o: in function `fixup_segment':
+/home/joey/Documents/projects/adelie/toolchain/binutils-2.32/build/gas/../../gas/write.c:1073: undefined reference to `md_pcrel_from'
+/usr/bin/ld: /home/joey/Documents/projects/adelie/toolchain/binutils-2.32/build/gas/../../gas/write.c:1053: undefined reference to `md_pcrel_from'
+collect2: error: ld returned 1 exit status
+make[4]: *** [Makefile:1080: as-new] Error 1
+make[3]: *** [Makefile:1269: all-recursive] Error 1
+make[2]: *** [Makefile:814: all] Error 2
+make[1]: *** [Makefile:4863: all-gas] Error 2
+make: *** [Makefile:849: all] Error 2

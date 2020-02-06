@@ -120,58 +120,67 @@ parse_exp_save_ilp (char *s, expressionS *op)
   return s;
 }
 
-// static int
-// parse_register_operand (char **ptr)
-// {
-//   int reg;
-//   char *s = *ptr;
+static int
+parse_register_operand (char **ptr)
+{
+  int reg;
+  char *s = *ptr;
 
-//   if (*s != '$')
-//     {
-//       as_bad (_("expecting register"));
-//       ignore_rest_of_line ();
-//       return -1;
-//     }
-//   if (s[1] == 'f' && s[2] == 'p')
-//     {
-//       *ptr += 3;
-//       return 0;
-//     }
-//   if (s[1] == 's' && s[2] == 'p')
-//     {
-//       *ptr += 3;
-//       return 1;
-//     }
-//   if (s[1] == 'r')
-//     {
-//       reg = s[2] - '0';
-//       if ((reg < 0) || (reg > 9))
-//  {
-//    as_bad (_("illegal register number"));
-//    ignore_rest_of_line ();
-//    return -1;
-//  }
-//       if (reg == 1)
-//  {
-//    int r2 = s[3] - '0';
-//    if ((r2 >= 0) && (r2 <= 3))
-//      {
-//        reg = 10 + r2;
-//        *ptr += 1;
-//      }
-//  }
-//     }
-//   else
-//     {
-//       as_bad (_("illegal register number"));
-//       ignore_rest_of_line ();
-//       return -1;
-//     }
+  if (*s != '$')
+  {
+    as_bad (_("expecting register"));
+    ignore_rest_of_line ();
+    return -1;
+  }
+  // if (s[1] == 'f' && s[2] == 'p')
+  // {
+  //   *ptr += 3;
+  //   return 0;
+  // }
+  // if (s[1] == 's' && s[2] == 'p')
+  // {
+  //   *ptr += 3;
+  //   return 1;
+  // }
+  if (s[1] == 'r')
+  {
+    reg = s[2] - '0';
+    if ((reg < 0) || (reg > 9))
+    {
+      as_bad (_("illegal register number"));
+      ignore_rest_of_line ();
+      return -1;
+    }
+    if (reg == 3)
+    {
+      int r2 = s[3] - '0';
+      if ((r2 >= 0) && (r2 <= 1))
+      {
+        reg = 30 + r2;
+        *ptr += 1;
+      }
+    }
+    if ((0 <= reg) && (reg <= 2))
+    {
+      int r2 = s[3] - '0';
+      if ((r2 >= 0) && (r2 <= 9))
+      {
+        reg = reg*10 + r2;
+        *ptr += 1;
+      }
+    }
+  }
+  else
+  {
+    as_bad (_("illegal register number"));
+    ignore_rest_of_line ();
+    return -1;
+  }
 
-//   *ptr += 3;
+  *ptr += 3;
 
-//   return reg + 2;
-// }
+  return reg;
+}
 
 /* This is the guts of the machine-dependent assembler.  STR points to
    a machine dependent instruction.  This function is supposed to emit
@@ -245,6 +254,8 @@ md_assemble (char *str)
 
   // p = frag_more(1);
 
+
+  expressionS arg;
   char *where;
 
   switch (opcode->itype)
@@ -268,6 +279,71 @@ md_assemble (char *str)
     break;
   
   case ADELIE_F2_3REG:
+
+    // if ((*op_end != '$') || (*(op_end+1) != 'r')) {
+    //   as_bad("Expecting register.");
+    //   ignore_rest_of_line();
+    //   return;
+    // }
+
+    while (ISSPACE(*op_end))
+      op_end++;
+    {
+      int r0, r1, r2;
+      
+      r0 = parse_register_operand(&op_end);
+      if (*op_end != ',')
+        as_bad("Expecting comma delimited operands");
+      op_end++;
+
+      r1 = parse_register_operand(&op_end);
+      if (*op_end != ',')
+        as_bad("Expecting comma delimited operands");
+      op_end++;
+
+      r2 = parse_register_operand(&op_end);
+
+      while (ISSPACE(*op_end))
+        op_end++;
+
+      if (*op_end != 0) {
+        as_warn("Extra stuff on line ignored");
+      }
+
+      iword += (r0<<11) + (r1<<6) + (r2<<1);
+    }
+
+    // regnum = op_end[2] - '0';
+    // if ((regnum < 0) || (regnum >= 8)) {
+    //   as_bad("Illegal register number.");
+    //   ignore_rest_of_line();
+    //   return;
+    // }
+
+    // op_end += 3;
+    // while (ISSPACE(*op_end)) {
+    //   op_end++;
+    // }
+
+    // if (*op_end != ',') {
+    //   as_bad("Expecting comma delimited operands.");
+    //   ignore_rest_of_line();
+    //   return;
+    // }
+    // op_end++;
+
+    // op_end = parse_exp_save_ilp(op_end, &arg);
+    where = frag_more(3);
+    
+    // fix_new_exp(
+    //   frag_now,
+    //   (where - frag_now->fr_literal),
+    //   4,
+    //   &arg,
+    //   0,
+    //   BFD_RELOC_ADELIE_19_IMM
+    // );
+
     break;
   
   case ADELIE_F2_2REG_IMM:
@@ -285,35 +361,43 @@ md_assemble (char *str)
       op_end++;
     }
 
-    expressionS arg;
-    int regnum;
+    while (ISSPACE(*op_end))
+      op_end++;
+    {
+      int r0;
+      
+      r0 = parse_register_operand(&op_end);
+      if (*op_end != ',')
+        as_bad("Expecting comma delimited operands");
+      op_end++;
 
-    if ((*op_end != '$') || (*(op_end+1) != 'r')) {
-      as_bad("Expecting register.");
-      ignore_rest_of_line();
-      return;
+      iword += r0 << 19;
     }
 
-    regnum = op_end[2] - '0';
-    if ((regnum < 0) || (regnum >= 8)) {
-      as_bad("Illegal register number.");
-      ignore_rest_of_line();
-      return;
-    }
+    // if ((*op_end != '$') || (*(op_end+1) != 'r')) {
+    //   as_bad("Expecting register.");
+    //   ignore_rest_of_line();
+    //   return;
+    // }
 
-    op_end += 3;
+    // regnum = op_end[2] - '0';
+    // if ((regnum < 0) || (regnum >= 8)) {
+    //   as_bad("Illegal register number.");
+    //   ignore_rest_of_line();
+    //   return;
+    // }
+
+    // op_end += 3;
     while (ISSPACE(*op_end)) {
       op_end++;
     }
 
-    iword += regnum << 19;
-
-    if (*op_end != ',') {
-      as_bad("Expecting comma delimited operands.");
-      ignore_rest_of_line();
-      return;
-    }
-    op_end++;
+    // if (*op_end != ',') {
+    //   as_bad("Expecting comma delimited operands.");
+    //   ignore_rest_of_line();
+    //   return;
+    // }
+    // op_end++;
 
     // p = frag_more(0);
 

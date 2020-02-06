@@ -161,7 +161,7 @@ const adelie_opc_info_t adelie_form1_opc_info[64] =
   
 const adelie_opc_info_t adelie_form2_opc_info[64] =
   {
-    { 0x00, ADELIE_F2_3REG, "bad" },
+    { 0x00, ADELIE_F2_3REG, "add" },
     { 0x01, ADELIE_F2_3REG, "bad" },
     { 0x02, ADELIE_F2_3REG, "bad" },
     { 0x03, ADELIE_F2_3REG, "bad" },

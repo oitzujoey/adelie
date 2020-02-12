@@ -4,10 +4,10 @@
 
 .vscode
 
-toolchain/binutils-2.32/build/*
-!toolchain/binutils-2.32/build/build
-!toolchain/binutils-2.32/build/err
-!toolchain/binutils-2.32/build/log
-!toolchain/binutils-2.32/build/test_as.sh
+toolchain/binutils-2.34/build/*
+!toolchain/binutils-2.34/build/build
+!toolchain/binutils-2.34/build/err
+!toolchain/binutils-2.34/build/log
+!toolchain/binutils-2.34/build/test_as.sh
 
 *.code-workspace

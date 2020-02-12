@@ -1,0 +1,12 @@
+--- ld/Makefile.am	2019-01-19 10:01:33.000000000 -0600
++++ ld/Makefile.am	2020-02-07 11:20:05.597269826 -0600
+@@ -1187,6 +1188,9 @@
+ eelf32mipswindiss.c: $(srcdir)/emulparams/elf32mipswindiss.sh $(ELF_DEPS) \
+   $(srcdir)/emultempl/mipself.em $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 
++eelf32adelie.c: $(srcdir)/emulparams/elf32adelie.sh \
++  $(ELF_GEN_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++
+ eelf32moxie.c: $(srcdir)/emulparams/elf32moxie.sh \
+   $(ELF_GEN_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+ 

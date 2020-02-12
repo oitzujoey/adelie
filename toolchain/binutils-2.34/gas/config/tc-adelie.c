@@ -193,14 +193,11 @@ md_assemble (char *str)
   char *op_end;
 
   adelie_opc_info_t *opcode;
-  char *p;
   char pend;
   int length = 0;
   unsigned long iword = 0;
 
   int nlen = 0;
-
-  printf("Assembly: %s\n", str);
 
   /* Drop leading whitespace.  */
   while (*str == ' ')
@@ -256,7 +253,7 @@ md_assemble (char *str)
 
 
   expressionS arg;
-  char *where;
+  char *where = NULL;
 
   switch (opcode->itype)
   {
@@ -313,37 +310,8 @@ md_assemble (char *str)
       iword += (r0<<11) + (r1<<6) + (r2<<1);
     }
 
-    // regnum = op_end[2] - '0';
-    // if ((regnum < 0) || (regnum >= 8)) {
-    //   as_bad("Illegal register number.");
-    //   ignore_rest_of_line();
-    //   return;
-    // }
-
-    // op_end += 3;
-    // while (ISSPACE(*op_end)) {
-    //   op_end++;
-    // }
-
-    // if (*op_end != ',') {
-    //   as_bad("Expecting comma delimited operands.");
-    //   ignore_rest_of_line();
-    //   return;
-    // }
-    // op_end++;
-
-    // op_end = parse_exp_save_ilp(op_end, &arg);
     where = frag_more(3);
     
-    // fix_new_exp(
-    //   frag_now,
-    //   (where - frag_now->fr_literal),
-    //   4,
-    //   &arg,
-    //   0,
-    //   BFD_RELOC_ADELIE_19_IMM
-    // );
-
     break;
   
   case ADELIE_F2_2REG_IMM:
@@ -374,50 +342,21 @@ md_assemble (char *str)
       iword += r0 << 19;
     }
 
-    // if ((*op_end != '$') || (*(op_end+1) != 'r')) {
-    //   as_bad("Expecting register.");
-    //   ignore_rest_of_line();
-    //   return;
-    // }
-
-    // regnum = op_end[2] - '0';
-    // if ((regnum < 0) || (regnum >= 8)) {
-    //   as_bad("Illegal register number.");
-    //   ignore_rest_of_line();
-    //   return;
-    // }
-
-    // op_end += 3;
     while (ISSPACE(*op_end)) {
       op_end++;
     }
 
-    // if (*op_end != ',') {
-    //   as_bad("Expecting comma delimited operands.");
-    //   ignore_rest_of_line();
-    //   return;
-    // }
-    // op_end++;
-
-    // p = frag_more(0);
-
     op_end = parse_exp_save_ilp(op_end, &arg);
     where = frag_more(4);
-    // p = frag_more(3);
+    
     fix_new_exp(
       frag_now,
       (where - frag_now->fr_literal),
-      // (p - frag_now->fr_literal),
       4,
       &arg,
       0,
-      // BFD_RELOC_16
       BFD_RELOC_ADELIE_19_IMM
     );
-
-    // p = frag_more(1);
-
-    // iword >>= 16;
 
     break;
   
@@ -495,8 +434,6 @@ enum options
 
 struct option md_longopts[] =
 {
-//   { "EB",          no_argument, NULL, OPTION_EB},
-//   { "EL",          no_argument, NULL, OPTION_EL},
   { NULL,          no_argument, NULL, 0}
 };
 
@@ -507,28 +444,12 @@ const char *md_shortopts = "";
 int
 md_parse_option (int c ATTRIBUTE_UNUSED, const char *arg ATTRIBUTE_UNUSED)
 {
-//   switch (c)
-//     {
-//     case OPTION_EB:
-//       target_big_endian = 1;
-//       break;
-//     case OPTION_EL:
-//       target_big_endian = 0;
-//       break;
-//     default:
-//       return 0;
-//     }
-
   return 0;
 }
 
 void
 md_show_usage (FILE *stream ATTRIBUTE_UNUSED)
 {
-/*  fprintf (stream, _("\
-  -EB                     assemble for a big endian system (default)\n\
-  -EL                     assemble for a little endian system\n"));
-*/
 }
 
 /* Apply a fixup to the object file.  */
@@ -546,55 +467,15 @@ md_apply_fix (fixS *fixP ATTRIBUTE_UNUSED,
   max = min = 0;
   switch (fixP->fx_r_type)
     {
-    // case BFD_RELOC_ADELIE_19_IMM:
-    //   if (val >= (1<<19))
-    //     as_bad_where (fixP->fx_file, fixP->fx_line, _("imm too large BFD_RELOC_ADELIE_19"));
-    //   buf[0] |= (val >> 16) & 0x7;
-    //   buf[1] |= val >> 8;
-    //   buf[2] |= val >> 0;
-    //   buf += 3;
-    //   break;
-
     case BFD_RELOC_ADELIE_19_IMM:
       if (val >= (1<<19))
         as_bad_where (fixP->fx_file, fixP->fx_line, _("imm too large BFD_RELOC_ADELIE_19"));
-      // buf[0] |= (val >> 16) & 0x7;
-      // buf[1] |= val >> 8;
-      // buf[2] |= val >> 0;
-      printf("%x\n", val);
-      printf("%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
+      
       newval = md_chars_to_number(buf, 4);
-      printf("newval=%x\n", newval);
       newval += val & 0x0003ffff;
-      printf("newval=%x\n", newval);
       md_number_to_chars(buf, newval, 4);
-      printf("%x %x %x %x\n", buf[0], buf[1], buf[2], buf[3]);
-      // buf += 3;
       
       break;
-
-    // case BFD_RELOC_16:
-    //   buf[0] = val >> 8;
-    //   buf[1] = val >> 0;
-    //   buf += 2;
-    //   break;
-
-//     case BFD_RELOC_8:
-//       *buf++ = val;
-//       break;
-
-//     case BFD_RELOC_MOXIE_10_PCREL:
-//       if (!val)
-//         break;
-//       if (val < -1024 || val > 1022)
-//         as_bad_where (fixP->fx_file, fixP->fx_line,
-//                       _("pcrel too far BFD_RELOC_MOXIE_10"));
-//       /* 11 bit offset even numbered, so we remove right bit.  */
-//       val >>= 1;
-//       newval = md_chars_to_number (buf, 2);
-//       newval |= val & 0x03ff;
-//       md_number_to_chars (buf, newval, 2);
-//       break;
 
     default:
       abort ();
@@ -622,18 +503,10 @@ static valueT md_chars_to_number (char * buf, int n) {
   valueT result = 0;
   unsigned char * where = (unsigned char *) buf;
 
-  // if (target_big_endian) {
   while (n--) {
     result <<= 8;
     result |= (*where++ & 255);
   }
-  // } else {
-  // while (n--) {
-  //   result <<= 8;
-  //   result |= (where[n] & 255);
-  // }
-  // }
-
   return result;
 }
 
@@ -645,10 +518,6 @@ tc_gen_reloc (asection *section ATTRIBUTE_UNUSED, fixS *fixP)
   bfd_reloc_code_real_type code;
 
   switch (fixP->fx_r_type) {
-
-    // case BFD_RELOC_32:
-    //   code = fixP->fx_r_type;
-    //   break;
 
     case BFD_RELOC_ADELIE_19_IMM:
       code = fixP->fx_r_type;
@@ -665,9 +534,7 @@ tc_gen_reloc (asection *section ATTRIBUTE_UNUSED, fixS *fixP)
   *relP->sym_ptr_ptr = symbol_get_bfdsym (fixP->fx_addsy);
   relP->address = fixP->fx_frag->fr_address + fixP->fx_where;
 
-    // code = fixP->fx_r_type;
   relP->addend = fixP->fx_offset;
-    // relP->addend = fixP->fx_addnumber;
 
   /* This is the standard place for KLUDGEs to work around bugs in
      bfd_install_relocation (first such note in the documentation
@@ -719,7 +586,7 @@ long
 md_pcrel_from (fixS *fixP)
 {
     valueT addr = fixP->fx_where + fixP->fx_frag->fr_address;
-    // return addr - 1;
+    
     fprintf(stderr, "md_pcrel_from 0x%d\n", fixP->fx_r_type);
 
   switch (fixP->fx_r_type)

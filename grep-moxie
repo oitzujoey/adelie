@@ -1,5 +1,0 @@
-adelie-gcc/binutils-2.32/bfd/libbfd.h:  "BFD_RELOC_MOXIE_10_PCREL",
-adelie-gcc/binutils-2.32/bfd/bfd-in2.h:  BFD_RELOC_MOXIE_10_PCREL,
-adelie-gcc/binutils-2.32/bfd/reloc.c:  BFD_RELOC_MOXIE_10_PCREL
-adelie-gcc/binutils-2.32/bfd/elf32-moxie.c:  { BFD_RELOC_MOXIE_10_PCREL,  R_MOXIE_PCREL10 },
-adelie-gcc/binutils-2.32/gas/config/tc-moxie.c:		     BFD_RELOC_MOXIE_10_PCREL);

@@ -24,8 +24,6 @@
    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,
    MA 02110-1301, USA.  */
 
-// ADELIE_TODO
-
 #include "sysdep.h"
 #include "bfd.h"
 #include "libbfd.h"
@@ -282,11 +280,8 @@ static bfd_boolean adelie_elf_relocate_section (bfd *output_bfd,
 #define ELF_MACHINE_CODE                EM_ADELIE
 #define ELF_MAXPAGESIZE                 0x1
 
-// #define TARGET_BIG_SYM		adelie_elf32_be_vec
 #define TARGET_BIG_SYM                  adelie_elf32_vec
 #define TARGET_BIG_NAME                 "elf32-adelie"
-// #define TARGET_LITTLE_SYM	adelie_elf32_le_vec
-// #define TARGET_LITTLE_NAME	"elf32-littleadelie"
 
 // #define elf_info_to_howto_rel			NULL
 #define elf_info_to_howto               adelie_info_to_howto_rela

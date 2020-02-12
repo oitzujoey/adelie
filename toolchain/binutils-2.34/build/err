@@ -1,0 +1,18 @@
+ar: `u' modifier ignored since `D' is the default (see `U')
+configure: WARNING: debuginfod is missing or unusable; some features may be unavailable.
+../../libiberty/dyn-string.c: In function ‘dyn_string_insert_cstr’:
+../../libiberty/dyn-string.c:280:3: warning: ‘strncpy’ output truncated before terminating nul copying as many bytes from a string as its length [-Wstringop-truncation]
+  280 |   strncpy (dest->s + pos, src, length);
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../libiberty/dyn-string.c:272:16: note: length computed here
+  272 |   int length = strlen (src);
+      |                ^~~~~~~~~~~~
+../../bfd/cpu-adelie.c:42:1: warning: missing initializer for field ‘max_reloc_offset_into_insn’ of ‘bfd_arch_info_type’ {aka ‘const struct bfd_arch_info’} [-Wmissing-field-initializers]
+   42 | };
+      | ^
+In file included from ../../bfd/cpu-adelie.c:24:
+./bfd.h:1972:14: note: ‘max_reloc_offset_into_insn’ declared here
+ 1972 |   signed int max_reloc_offset_into_insn;
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~
+libtool: link: warning: `-version-info/-version-number' is ignored for convenience libraries
+libtool: link: warning: `-version-info/-version-number' is ignored for convenience libraries
